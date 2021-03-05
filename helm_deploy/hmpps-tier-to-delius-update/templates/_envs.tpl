@@ -13,18 +13,6 @@ env:
   - name: SPRING_PROFILES_ACTIVE
     value: "logstash"
 
-  - name: OAUTH_CLIENT_ID
-    valueFrom:
-      secretKeyRef:
-         name: {{ template "app.name" . }}
-         key: OAUTH_CLIENT_ID
-
-  - name: OAUTH_CLIENT_SECRET
-    valueFrom:
-      secretKeyRef:
-         name: {{ template "app.name" . }}
-         key: OAUTH_CLIENT_SECRET
-
   - name: APPINSIGHTS_INSTRUMENTATIONKEY
     valueFrom:
       secretKeyRef:
