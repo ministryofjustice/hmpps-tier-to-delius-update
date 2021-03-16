@@ -34,7 +34,7 @@ env:
   - name: SPRING_PROFILES_ACTIVE
     value: "aws,logstash,stdout"
 
- - name: AWS_PROBATION_EVENTS_ACCESS_KEY
+  - name: AWS_PROBATION_EVENTS_ACCESS_KEY
     valueFrom:
       secretKeyRef:
         name: hmpps-tier-probation-events-sqs-instance-output
