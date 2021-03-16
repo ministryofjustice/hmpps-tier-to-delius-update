@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  owasp: entur/owasp@0.0.10
+  owasp: entur/owasp@0.0.14
   hmpps: ministryofjustice/hmpps@3.0
 
 executors:
@@ -22,34 +22,34 @@ executors:
     working_directory: ~/app
 
 jobs:
-validate:
-  executor: validator-integration
-  steps:
-    - checkout
-    - hmpps/install_aws_cli
-    - run:
-        name: Wait for SQS to be ready
-        command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4576
-    - run:
-        name: Wait for SNS to be ready
-        command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4575
-    - run:
-        name: Set up queues
-        command: src/test/resources/localstack/setup-sns.sh
-    - restore_cache:
-        keys:
-          - gradle-{{ checksum "build.gradle.kts" }}
-          - gradle-
-    - run:
-        command: ./gradlew check
-    - save_cache:
-        paths:
-          - ~/.gradle
-        key: gradle-{{ checksum "build.gradle.kts" }}
-    - store_test_results:
-        path: build/test-results
-    - store_artifacts:
-        path: build/reports/tests
+  validate:
+    executor: validator-integration
+    steps:
+      - checkout
+      - hmpps/install_aws_cli
+      - run:
+          name: Wait for SQS to be ready
+          command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4576
+      - run:
+          name: Wait for SNS to be ready
+          command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4575
+      - run:
+          name: Set up queues
+          command: src/test/resources/localstack/setup-sns.sh
+      - restore_cache:
+          keys:
+            - gradle-{{ checksum "build.gradle.kts" }}
+            - gradle-
+      - run:
+          command: ./gradlew check
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: gradle-{{ checksum "build.gradle.kts" }}
+      - store_test_results:
+          path: build/test-results
+      - store_artifacts:
+          path: build/reports/tests
 
 workflows:
   version: 2
