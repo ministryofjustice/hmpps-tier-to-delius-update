@@ -10,17 +10,17 @@ import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMe
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.model.TierUpdate
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.services.TierUpdateService
 
-internal class HMPPSRegisterListenerTest {
+internal class HMPPSTierListenerTest {
   private val tierUpdateService: TierUpdateService = mock()
   private val gson: Gson = Gson()
   private val listener: HMPPSTierListener =
     HMPPSTierListener(tierUpdateService = tierUpdateService, gson = gson)
 
   @Test
-  internal fun `will call service for a court update`() {
+  internal fun `will call service for a Tier update`() {
     listener.onRegisterChange(tierUpdateMessage())
 
-    verify(tierUpdateService).updateCourtRegister(TierUpdate("12345"))
+    verify(tierUpdateService).updateTier(TierUpdate("12345"))
   }
 
   @Test

@@ -11,7 +11,7 @@ class TierUpdateService {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
   }
 
-  fun updateCourtRegister(tier: TierUpdate) {
+  fun updateTier(tier: TierUpdate) {
     log.info("About to update court $tier")
   }
 }

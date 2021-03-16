@@ -24,14 +24,14 @@ class HMPPSTierListener(
     log.info("Received message ${sqsMessage.MessageId}")
     val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
     when (changeEvent.eventType) {
-      EventType.HMPPS_TIER_CALCULATION_COMPLETE -> tierUpdateService.updateCourtRegister(TierUpdate(crn = changeEvent.id))
+      EventType.HMPPS_TIER_CALCULATION_COMPLETE -> tierUpdateService.updateTier(TierUpdate(crn = changeEvent.crn))
       else -> log.info("Received a message I wasn't expecting $changeEvent")
     }
   }
 
   data class TierChangeEvent(
     val eventType: EventType?,
-    val id: String
+    val crn: String
   )
 
   data class SQSMessage(val Message: String, val MessageId: String)

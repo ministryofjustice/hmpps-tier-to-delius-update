@@ -14,7 +14,7 @@ import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMe
 
 @SpringBootTest
 @ActiveProfiles("test")
-class CourtRegisterTest {
+class TierTest {
   @Qualifier("awsSqsClient")
   @Autowired
   internal lateinit var awsSqsClient: AmazonSQS
