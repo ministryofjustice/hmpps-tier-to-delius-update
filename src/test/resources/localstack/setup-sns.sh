@@ -11,6 +11,6 @@ aws --endpoint-url=http://localhost:4575 sns subscribe \
     --topic-arn arn:aws:sns:eu-west-2:000000000000:hmpps-domain-events \
     --protocol sqs \
     --notification-endpoint http://localhost:4576/queue/hmpps_tier_to_delius_queue \
-    --attributes '{"FilterPolicy":"{\"eventType\":[ \"HMPPS_TIER_CALCULATION_COMPLETE\""] }"}'
+    --attributes '{"FilterPolicy":"{\"eventType\":[ \"HMPPS_TIER_CALCULATION_COMPLETE\"] }"}'
 
 echo All Ready
