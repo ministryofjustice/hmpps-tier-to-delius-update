@@ -37,7 +37,6 @@ class HMPPSTierListener(
   data class SQSMessage(val Message: String, val MessageId: String)
 
   enum class EventType {
-    HMPPS_TIER_CALCULATION_COMPLETE
-    ,
+    HMPPS_TIER_CALCULATION_COMPLETE,
   }
 }
