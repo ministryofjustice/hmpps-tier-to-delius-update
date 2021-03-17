@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient
 @Profile("test")
 class WebClientConfiguration(
   @Value("\${community.endpoint.url}") private val communityApiRootUri: String,
-  @Value("\${assessment.endpoint.url}") private val assessmentApiRootUri: String
+  @Value("\${hmpps-tier.endpoint.url}") private val hmppsTierApiRootUri: String
 ) {
 
   @Bean
@@ -19,7 +19,7 @@ class WebClientConfiguration(
   }
 
   @Bean
-  fun assessmentWebClientAppScope(): WebClient {
-    return WebClient.builder().baseUrl(assessmentApiRootUri).build()
+  fun hmppsTierWebClientAppScope(): WebClient {
+    return WebClient.builder().baseUrl(hmppsTierApiRootUri).build()
   }
 }
