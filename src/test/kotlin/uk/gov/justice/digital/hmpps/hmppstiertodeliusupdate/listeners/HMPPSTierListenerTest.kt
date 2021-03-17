@@ -10,6 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiC
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.courtRegisterInsertMessage
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMessage
+import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
 
 internal class HMPPSTierListenerTest {
   private val gson: Gson = Gson()
@@ -17,11 +18,12 @@ internal class HMPPSTierListenerTest {
   @Test
   internal fun `will call service for a Tier update`() {
     val communityApiClient: CommunityApiClient = mock()
+    val telemetryService: TelemetryService = mock()
     val hmppsTierApiClient: HmppsTierApiClient = mock {
       on { getTierByCrn("12345") } doReturn "A0"
     }
 
-    val listener = HMPPSTierListener(communityApiClient = communityApiClient, hmppsTierApiClient = hmppsTierApiClient, gson = gson)
+    val listener = HMPPSTierListener(communityApiClient = communityApiClient, hmppsTierApiClient = hmppsTierApiClient, telemetryService = telemetryService, gson = gson)
 
     listener.onRegisterChange(tierUpdateMessage())
 
@@ -34,11 +36,12 @@ internal class HMPPSTierListenerTest {
   @Test
   internal fun `will not call service for events we don't understand`() {
     val communityApiClient: CommunityApiClient = mock()
+    val telemetryService: TelemetryService = mock()
     val hmppsTierApiClient: HmppsTierApiClient = mock {
       on { getTierByCrn("12345") } doReturn "A0"
     }
 
-    val listener = HMPPSTierListener(communityApiClient = communityApiClient, hmppsTierApiClient = hmppsTierApiClient, gson = gson)
+    val listener = HMPPSTierListener(communityApiClient = communityApiClient, hmppsTierApiClient = hmppsTierApiClient, telemetryService = telemetryService, gson = gson)
 
     listener.onRegisterChange(courtRegisterInsertMessage())
 

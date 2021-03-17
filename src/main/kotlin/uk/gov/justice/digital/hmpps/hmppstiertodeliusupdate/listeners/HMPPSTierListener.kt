@@ -8,11 +8,13 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.model.TierUpdate
+import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
 
 @Service
 class HMPPSTierListener(
   private val communityApiClient: CommunityApiClient,
   private val hmppsTierApiClient: HmppsTierApiClient,
+  private val telemetryService: TelemetryService,
   private val gson: Gson
 ) {
 
@@ -32,10 +34,17 @@ class HMPPSTierListener(
   }
 
   private fun updateTier(tierUpdate: TierUpdate) {
-    with(tierUpdate) {
-      hmppsTierApiClient.getTierByCrn(crn).let {
-        communityApiClient.updateTier(it, crn)
+    try {
+      with(tierUpdate) {
+        hmppsTierApiClient.getTierByCrn(crn).let {
+          communityApiClient.updateTier(it, crn)
+        }.also {
+          telemetryService.successfulWrite(tierUpdate)
+        }
       }
+    } catch (e: Exception) {
+      telemetryService.failedWrite(tierUpdate)
+      throw e
     }
   }
 
