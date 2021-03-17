@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.model.TierUpdate
+import java.util.UUID
 
 @Service
 class HMPPSTierListener(
@@ -26,14 +27,14 @@ class HMPPSTierListener(
     log.info("Received message ${sqsMessage.MessageId}")
     val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
     when (changeEvent.eventType) {
-      EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(TierUpdate(crn = changeEvent.crn))
+      EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(TierUpdate(crn = changeEvent.crn, calculationId = changeEvent.calculationId))
       else -> log.info("Received a message I wasn't expecting $changeEvent")
     }
   }
 
   private fun updateTier(tierUpdate: TierUpdate) {
     with(tierUpdate) {
-      hmppsTierApiClient.getTierByCrn(crn).let {
+      hmppsTierApiClient.getTierByCrn(crn, calculationId).let {
         communityApiClient.updateTier(it, crn)
       }
     }
@@ -41,7 +42,8 @@ class HMPPSTierListener(
 
   data class TierChangeEvent(
     val eventType: EventType?,
-    val crn: String
+    val crn: String,
+    val calculationId: UUID
   )
 
   data class SQSMessage(val Message: String, val MessageId: String)

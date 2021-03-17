@@ -1,3 +1,5 @@
 package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.model
 
-data class TierUpdate(val crn: String)
+import java.util.UUID
+
+data class TierUpdate(val crn: String, val calculationId: UUID)
