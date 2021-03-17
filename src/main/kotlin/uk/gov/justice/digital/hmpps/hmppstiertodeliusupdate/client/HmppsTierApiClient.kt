@@ -11,7 +11,7 @@ import java.util.UUID
 @Component
 class HmppsTierApiClient(@Qualifier("hmppsTierWebClientAppScope") private val webClient: WebClient) {
 
-  fun getTierByCrn(crn: String, calculationId : UUID): String {
+  fun getTierByCrn(crn: String, calculationId: UUID): String {
     return getTierByCrnCall(crn, calculationId)
       .also {
         log.info("Fetching Tier for $crn")
@@ -19,7 +19,7 @@ class HmppsTierApiClient(@Qualifier("hmppsTierWebClientAppScope") private val we
       }
   }
 
-  private fun getTierByCrnCall(crn: String, calculationId : UUID): String {
+  private fun getTierByCrnCall(crn: String, calculationId: UUID): String {
     return webClient
       .get()
       .uri("/offenders/crn/$crn/tier/$calculationId")
