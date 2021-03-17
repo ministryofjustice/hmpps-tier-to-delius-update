@@ -10,3 +10,6 @@ aws:
 
 sqs:
   endpoint.url: http://localhost:4576
+
+community.endpoint.url: localhost:8082
+hmpps-tier.endpoint.url: localhost:8081

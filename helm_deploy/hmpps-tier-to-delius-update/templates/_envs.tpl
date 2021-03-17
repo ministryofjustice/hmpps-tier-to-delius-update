@@ -31,6 +31,9 @@ env:
   - name: COMMUNITY_ENDPOINT_URL
     value: "{{ .Values.env.COMMUNITY_ENDPOINT_URL }}"
 
+  - name: HMPPS_TIER_ENDPOINT_URL
+    value: "{{ .Values.env.HMPPS_TIER_ENDPOINT_URL }}"
+
   - name: SPRING_PROFILES_ACTIVE
     value: "aws,logstash,stdout"
 
