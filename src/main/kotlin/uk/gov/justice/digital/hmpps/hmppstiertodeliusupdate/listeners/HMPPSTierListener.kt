@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.InvalidMessageException
-import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.model.TierUpdate
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
+import java.util.*
 
 @Service
 class HMPPSTierListener(
@@ -29,7 +29,7 @@ class HMPPSTierListener(
     log.info("Received message ${sqsMessage.MessageId}")
     val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
     when (changeEvent.eventType) {
-      EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(TierUpdate(crn = changeEvent.crn))
+      EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
       else -> {
         telemetryService.invalidMessage(sqsMessage.MessageId)
         throw InvalidMessageException("Received a message I wasn't expecting $changeEvent")
@@ -37,24 +37,23 @@ class HMPPSTierListener(
     }
   }
 
-  private fun updateTier(tierUpdate: TierUpdate) {
+  private fun updateTier(crn: String, calculationId: UUID) {
     try {
-      with(tierUpdate) {
-        hmppsTierApiClient.getTierByCrn(crn).let {
+        hmppsTierApiClient.getTierByCrn(crn, calculationId).let {
           communityApiClient.updateTier(it, crn)
         }.also {
-          telemetryService.successfulWrite(tierUpdate)
+          telemetryService.successfulWrite(crn, calculationId)
         }
-      }
     } catch (e: Exception) {
-      telemetryService.failedWrite(tierUpdate)
+      telemetryService.failedWrite(crn, calculationId)
       throw e
     }
   }
 
   data class TierChangeEvent(
     val eventType: EventType?,
-    val crn: String
+    val crn: String,
+    val calculationId: UUID
   )
 
   data class SQSMessage(val Message: String, val MessageId: String)

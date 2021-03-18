@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service
 import com.microsoft.applicationinsights.TelemetryClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.model.TierUpdate
+import java.util.*
 
 @Component
 class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) {
@@ -21,20 +21,22 @@ class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) 
     )
   }
 
-  fun successfulWrite(tierUpdate: TierUpdate) {
+  fun successfulWrite(crn: String, calculationId: UUID) {
     trackEvent(
       TelemetryEventType.TIER_UPDATE_CALL_SUCCESS,
       mapOf(
-        "crn" to tierUpdate.crn
+        "crn" to crn,
+        "calculationId" to calculationId.toString()
       )
     )
   }
 
-  fun failedWrite(tierUpdate: TierUpdate) {
+  fun failedWrite(crn: String, calculationId: UUID) {
     trackEvent(
       TelemetryEventType.TIER_UPDATE_CALL_FAILED,
       mapOf(
-        "crn" to tierUpdate.crn
+        "crn" to crn,
+        "calculationId" to calculationId.toString()
       )
     )
   }
