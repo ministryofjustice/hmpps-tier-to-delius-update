@@ -7,6 +7,7 @@ import org.springframework.jms.annotation.JmsListener
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
+import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.InvalidMessageException
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.model.TierUpdate
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
 
@@ -29,7 +30,10 @@ class HMPPSTierListener(
     val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
     when (changeEvent.eventType) {
       EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(TierUpdate(crn = changeEvent.crn))
-      else -> log.info("Received a message I wasn't expecting $changeEvent")
+      else -> {
+        telemetryService.invalidMessage(sqsMessage.MessageId)
+        throw InvalidMessageException("Received a message I wasn't expecting $changeEvent")
+      }
     }
   }
 
