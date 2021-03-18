@@ -5,9 +5,11 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
+import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.InvalidMessageException
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.courtRegisterInsertMessage
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMessage
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
@@ -46,7 +48,9 @@ internal class HMPPSTierListenerTest {
 
     val listener = HMPPSTierListener(communityApiClient = communityApiClient, hmppsTierApiClient = hmppsTierApiClient, telemetryService = telemetryService, gson = gson)
 
-    listener.onRegisterChange(courtRegisterInsertMessage())
+    Assertions.assertThrows(InvalidMessageException::class.java) {
+      listener.onRegisterChange(courtRegisterInsertMessage())
+    }
 
     verifyNoMoreInteractions(communityApiClient)
     verifyNoMoreInteractions(hmppsTierApiClient)

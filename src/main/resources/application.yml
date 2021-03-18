@@ -77,5 +77,4 @@ aws:
 sqs:
   provider: ${aws.provider}
   queue.name: hmpps_tier_to_delius_queue
-  dlq.name: hmpps_tier_to_delius_dlq
   endpoint.region: ${aws.region}
