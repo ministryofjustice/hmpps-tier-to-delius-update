@@ -10,9 +10,6 @@ env:
   - name: JAVA_OPTS
     value: "{{ .Values.env.JAVA_OPTS }}"
 
-  - name: SPRING_PROFILES_ACTIVE
-    value: "logstash"
-
   - name: OAUTH_CLIENT_ID
     valueFrom:
       secretKeyRef:
@@ -24,6 +21,39 @@ env:
       secretKeyRef:
          name: {{ template "app.name" . }}
          key: OAUTH_CLIENT_SECRET
+
+  - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+    value: "{{ .Values.env.SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI }}"
+
+  - name: OAUTH_ENDPOINT_URL
+    value: "{{ .Values.env.OAUTH_ROOT_URL }}"
+
+  - name: COMMUNITY_ENDPOINT_URL
+    value: "{{ .Values.env.COMMUNITY_ENDPOINT_URL }}"
+
+  - name: HMPPS_TIER_ENDPOINT_URL
+    value: "{{ .Values.env.HMPPS_TIER_ENDPOINT_URL }}"
+
+  - name: SPRING_PROFILES_ACTIVE
+    value: "aws,logstash,stdout"
+
+  - name: AWS_PROBATION_EVENTS_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: hmpps-tier-probation-events-sqs-instance-output
+        key: access_key_id
+
+  - name: AWS_PROBATION_EVENTS_SECRET_ACCESS_KEY
+    valueFrom:
+      secretKeyRef:
+        name: hmpps-tier-probation-events-sqs-instance-output
+        key: secret_access_key
+
+  - name: AWS_PROBATION_EVENTS_QUEUE
+    valueFrom:
+      secretKeyRef:
+        name: hmpps-tier-probation-events-sqs-instance-output
+        key: sqs_ptpu_url
 
   - name: APPINSIGHTS_INSTRUMENTATIONKEY
     valueFrom:
