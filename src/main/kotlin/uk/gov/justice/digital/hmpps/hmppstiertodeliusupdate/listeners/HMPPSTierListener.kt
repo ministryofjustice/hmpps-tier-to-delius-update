@@ -39,7 +39,7 @@ class HMPPSTierListener(
 
   private fun updateTier(crn: String, calculationId: UUID) {
     try {
-        hmppsTierApiClient.getTierByCrn(crn, calculationId).let {
+        hmppsTierApiClient.getTierByCrnAndCalculationId(crn, calculationId).let {
           communityApiClient.updateTier(it, crn)
         }.also {
           telemetryService.successfulWrite(crn, calculationId)
