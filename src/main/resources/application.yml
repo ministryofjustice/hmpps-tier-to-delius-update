@@ -75,6 +75,10 @@ aws:
   region: eu-west-2
 
 sqs:
+  aws:
+    access-key-id: ${aws.probation.events.access.key}
+    secret-access-key: ${aws.probation.events.secret.access.key}
   provider: ${aws.provider}
   queue.name: hmpps_tier_to_delius_queue
   endpoint.region: ${aws.region}
+
