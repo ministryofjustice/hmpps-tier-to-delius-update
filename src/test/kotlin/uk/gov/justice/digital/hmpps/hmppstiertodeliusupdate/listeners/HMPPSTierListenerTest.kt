@@ -11,7 +11,7 @@ import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiC
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.courtRegisterInsertMessage
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMessage
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
-import java.util.*
+import java.util.UUID
 
 internal class HMPPSTierListenerTest {
   private val gson: Gson = Gson()

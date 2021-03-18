@@ -9,7 +9,7 @@ import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiC
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.InvalidMessageException
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
-import java.util.*
+import java.util.UUID
 
 @Service
 class HMPPSTierListener(
@@ -39,11 +39,11 @@ class HMPPSTierListener(
 
   private fun updateTier(crn: String, calculationId: UUID) {
     try {
-        hmppsTierApiClient.getTierByCrnAndCalculationId(crn, calculationId).let {
-          communityApiClient.updateTier(it, crn)
-        }.also {
-          telemetryService.successfulWrite(crn, calculationId)
-        }
+      hmppsTierApiClient.getTierByCrnAndCalculationId(crn, calculationId).let {
+        communityApiClient.updateTier(it, crn)
+      }.also {
+        telemetryService.successfulWrite(crn, calculationId)
+      }
     } catch (e: Exception) {
       telemetryService.failedWrite(crn, calculationId)
       throw e

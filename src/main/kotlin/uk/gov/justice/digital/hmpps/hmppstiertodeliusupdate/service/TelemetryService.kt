@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service
 import com.microsoft.applicationinsights.TelemetryClient
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
-import java.util.*
+import java.util.UUID
 
 @Component
 class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) {
