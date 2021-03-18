@@ -10,9 +10,6 @@ env:
   - name: JAVA_OPTS
     value: "{{ .Values.env.JAVA_OPTS }}"
 
-  - name: SPRING_PROFILES_ACTIVE
-    value: "logstash"
-
   - name: OAUTH_CLIENT_ID
     valueFrom:
       secretKeyRef:
