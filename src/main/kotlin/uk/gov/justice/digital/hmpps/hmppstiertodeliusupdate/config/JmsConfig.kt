@@ -40,8 +40,8 @@ class JmsConfig {
   @Bean
   @ConditionalOnProperty(name = ["sqs.provider"], havingValue = "aws")
   fun awsSqsClient(
-    @Value("\${sqs.aws.access.key.id}") accessKey: String,
-    @Value("\${sqs.aws.secret.access.key}") secretKey: String,
+    @Value("\${sqs.aws.access-key-id}") accessKey: String,
+    @Value("\${sqs.aws.secret-access-key}") secretKey: String,
     @Value("\${sqs.endpoint.region}") region: String
   ): AmazonSQS =
     AmazonSQSClientBuilder.standard()
