@@ -23,7 +23,7 @@ class AwsLocalStackConfiguration(
   @Primary
   @Bean
   fun amazonSQSAsync(
-    @Value("\${sqs.endpoint.url}") serviceEndpoint: String
+    @Value("\${sqs.queue}") serviceEndpoint: String
   ): AmazonSQSAsync {
     return AmazonSQSAsyncClientBuilder.standard()
       .withEndpointConfiguration(AwsClientBuilder.EndpointConfiguration(serviceEndpoint, region))
