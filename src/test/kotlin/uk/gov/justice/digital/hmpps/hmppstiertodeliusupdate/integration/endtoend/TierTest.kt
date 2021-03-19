@@ -19,8 +19,8 @@ class TierTest {
   @Autowired
   internal lateinit var awsSqsClient: AmazonSQS
 
-  @Value("\${sqs.queue.name}")
-  lateinit var queueName: String
+  @Value("\${sqs.queue}")
+  lateinit var queue: String
 
   @Test
   fun `will consume a HMPPS_TIER_CALCULATION_COMPLETE message`() {
@@ -28,13 +28,13 @@ class TierTest {
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
 
-    awsSqsClient.sendMessage(queueName.queueUrl(), message)
+    awsSqsClient.sendMessage(queue, message)
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
   }
 
   fun getNumberOfMessagesCurrentlyOnQueue(): Int? {
-    val queueAttributes = awsSqsClient.getQueueAttributes(queueName.queueUrl(), listOf("ApproximateNumberOfMessages"))
+    val queueAttributes = awsSqsClient.getQueueAttributes(queue, listOf("ApproximateNumberOfMessages"))
     return queueAttributes.attributes["ApproximateNumberOfMessages"]?.toInt()
   }
 

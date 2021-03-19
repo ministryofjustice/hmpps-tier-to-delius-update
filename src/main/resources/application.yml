@@ -78,7 +78,7 @@ aws:
   region: eu-west-2
 
 sqs:
-  aws:
+  probation:
     access-key-id: ${aws.probation.events.access.key}
     secret-access-key: ${aws.probation.events.secret.access.key}
   provider: ${aws.provider}

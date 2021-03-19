@@ -22,7 +22,7 @@ class AwsLocalStackConfiguration(
 
   @Primary
   @Bean
-  fun amazonSQSAsync(
+  fun awsSqsClient(
     @Value("\${sqs.queue}") serviceEndpoint: String
   ): AmazonSQSAsync {
     return AmazonSQSAsyncClientBuilder.standard()

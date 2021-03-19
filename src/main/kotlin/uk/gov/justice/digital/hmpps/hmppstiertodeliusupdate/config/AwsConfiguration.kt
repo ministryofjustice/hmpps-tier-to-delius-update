@@ -19,8 +19,8 @@ import org.springframework.context.annotation.Primary
 @Configuration
 @ConditionalOnProperty(name = ["sqs.provider"], havingValue = "aws")
 class AwsConfiguration(
-  @Value("\${sqs.aws.access-key-id}") val accessKeyId: String,
-  @Value("\${sqs.aws.secret-access-key}") val secretKey: String,
+  @Value("\${sqs.probation.access-key-id}") val accessKeyId: String,
+  @Value("\${sqs.probation.secret-access-key}") val secretKey: String,
   @Value("\${sqs.endpoint.region}") val region: String,
 ) {
 
