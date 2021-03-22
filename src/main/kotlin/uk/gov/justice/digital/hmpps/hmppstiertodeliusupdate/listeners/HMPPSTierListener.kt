@@ -3,7 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.listeners
 import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.jms.annotation.JmsListener
+import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS
+import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
@@ -23,7 +24,7 @@ class HMPPSTierListener(
     val log: Logger = LoggerFactory.getLogger(this::class.java)
   }
 
-  @JmsListener(destination = "\${sqs.queue.name}")
+  @SqsListener(value = ["\${sqs.queue}"], deletionPolicy = ON_SUCCESS)
   fun onRegisterChange(message: String) {
     val sqsMessage: SQSMessage = gson.fromJson(message, SQSMessage::class.java)
     log.info("Received message ${sqsMessage.MessageId}")

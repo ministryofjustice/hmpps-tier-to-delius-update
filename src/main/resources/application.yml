@@ -15,6 +15,9 @@ spring:
 
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: classpath:local-public-key.pub
       client:
         registration:
           community-api:
@@ -75,6 +78,10 @@ aws:
   region: eu-west-2
 
 sqs:
+  probation:
+    access-key-id: ${aws.probation.events.access.key}
+    secret-access-key: ${aws.probation.events.secret.access.key}
   provider: ${aws.provider}
-  queue.name: hmpps_tier_to_delius_queue
+  queue: ${aws.probation.events.queue}
   endpoint.region: ${aws.region}
+

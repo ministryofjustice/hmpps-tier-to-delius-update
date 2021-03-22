@@ -20,12 +20,19 @@ dependencies {
   implementation("com.google.code.gson:gson:2.8.6")
   implementation("org.springframework:spring-jms")
 
-  implementation(platform("com.amazonaws:aws-java-sdk-bom:1.11.959"))
-  implementation("com.amazonaws:amazon-sqs-java-messaging-lib:1.0.8")
+  implementation("org.springframework.cloud:spring-cloud-aws-messaging")
 
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
   testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
+}
+
+extra["springCloudVersion"] = "Hoxton.SR8"
+
+dependencyManagement {
+  imports {
+    mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+  }
 }
 
 tasks.register("fix") {

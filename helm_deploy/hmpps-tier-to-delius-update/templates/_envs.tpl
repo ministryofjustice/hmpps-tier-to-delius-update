@@ -40,20 +40,20 @@ env:
   - name: AWS_PROBATION_EVENTS_ACCESS_KEY
     valueFrom:
       secretKeyRef:
-        name: hmpps-tier-probation-events-sqs-instance-output
+        name: sqs-tier-to-delius-update-secret
         key: access_key_id
 
   - name: AWS_PROBATION_EVENTS_SECRET_ACCESS_KEY
     valueFrom:
       secretKeyRef:
-        name: hmpps-tier-probation-events-sqs-instance-output
+        name: sqs-tier-to-delius-update-secret
         key: secret_access_key
 
   - name: AWS_PROBATION_EVENTS_QUEUE
     valueFrom:
       secretKeyRef:
-        name: hmpps-tier-probation-events-sqs-instance-output
-        key: sqs_ptpu_url
+        name: sqs-tier-to-delius-update-secret
+        key: sqs_queue_url
 
   - name: APPINSIGHTS_INSTRUMENTATIONKEY
     valueFrom:
