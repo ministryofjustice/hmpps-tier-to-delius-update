@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.listeners
 import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener
 import org.springframework.stereotype.Service
@@ -17,7 +18,8 @@ class HMPPSTierListener(
   private val communityApiClient: CommunityApiClient,
   private val hmppsTierApiClient: HmppsTierApiClient,
   private val telemetryService: TelemetryService,
-  private val gson: Gson
+  private val gson: Gson,
+  @Value("\${flags.enableDeliusTierUpdates}") private val enableUpdates: Boolean
 ) {
 
   companion object {
@@ -27,14 +29,19 @@ class HMPPSTierListener(
   @SqsListener(value = ["\${sqs.queue}"], deletionPolicy = ON_SUCCESS)
   fun onRegisterChange(message: String) {
     val sqsMessage: SQSMessage = gson.fromJson(message, SQSMessage::class.java)
+
     log.info("Received message ${sqsMessage.MessageId}")
-    val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
-    when (changeEvent.eventType) {
-      EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
-      else -> {
-        telemetryService.invalidMessage(sqsMessage.MessageId)
-        throw InvalidMessageException("Received a message I wasn't expecting $changeEvent")
+    if(enableUpdates) {
+      val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
+      when (changeEvent.eventType) {
+        EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
+        else -> {
+          telemetryService.invalidMessage(sqsMessage.MessageId)
+          throw InvalidMessageException("Received a message I wasn't expecting $changeEvent")
+        }
       }
+    } else {
+      log.info("Updates to Delius disabled, dumping message ${sqsMessage.MessageId}")
     }
   }
 

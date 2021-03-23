@@ -85,3 +85,5 @@ sqs:
   queue: ${aws.probation.events.queue}
   endpoint.region: ${aws.region}
 
+flags:
+  enableDeliusTierUpdates: false
