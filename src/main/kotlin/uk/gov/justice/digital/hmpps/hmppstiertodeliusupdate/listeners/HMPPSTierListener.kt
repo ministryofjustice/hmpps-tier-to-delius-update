@@ -31,7 +31,7 @@ class HMPPSTierListener(
     val sqsMessage: SQSMessage = gson.fromJson(message, SQSMessage::class.java)
 
     log.info("Received message ${sqsMessage.MessageId}")
-    if(enableUpdates) {
+    if (enableUpdates) {
       val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
       when (changeEvent.eventType) {
         EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
