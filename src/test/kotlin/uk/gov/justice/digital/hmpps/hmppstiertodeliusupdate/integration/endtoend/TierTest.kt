@@ -23,7 +23,7 @@ class TierTest {
   lateinit var queue: String
 
   @Test
-  fun `will consume a HMPPS_TIER_CALCULATION_COMPLETE message`() {
+  fun `will consume a TIER_CALCULATION_COMPLETE message`() {
     val message = tierUpdateMessage()
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
