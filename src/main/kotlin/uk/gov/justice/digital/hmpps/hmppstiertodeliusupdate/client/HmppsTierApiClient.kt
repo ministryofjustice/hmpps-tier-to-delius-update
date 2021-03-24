@@ -22,7 +22,7 @@ class HmppsTierApiClient(@Qualifier("hmppsTierWebClientAppScope") private val we
   private fun getTierByCrnCall(crn: String, calculationId: UUID): String {
     return webClient
       .get()
-      .uri("/offenders/crn/$crn/tier/$calculationId")
+      .uri("/crn/$crn/tier/$calculationId")
       .retrieve()
       .bodyToMono(TierDto::class.java)
       .block()?.tierScore ?: throw EntityNotFoundException("No Tier record $calculationId found for $crn")
