@@ -34,7 +34,7 @@ class HMPPSTierListener(
     if (enableUpdates) {
       val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
       when (changeEvent.eventType) {
-        EventType.HMPPS_TIER_CALCULATION_COMPLETE -> updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
+        EventType.TIER_CALCULATION_COMPLETE -> updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
         else -> {
           telemetryService.invalidMessage(sqsMessage.MessageId)
           throw InvalidMessageException("Received a message I wasn't expecting $changeEvent")
@@ -67,6 +67,6 @@ class HMPPSTierListener(
   data class SQSMessage(val Message: String, val MessageId: String)
 
   enum class EventType {
-    HMPPS_TIER_CALCULATION_COMPLETE,
+    TIER_CALCULATION_COMPLETE,
   }
 }

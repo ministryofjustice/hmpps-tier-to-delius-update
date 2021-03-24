@@ -6,7 +6,7 @@ fun tierUpdateMessage() = """
         "MessageId": "48e8a79a-0f43-4338-bbd4-b0d745f1f8ec", 
         "Token": null, 
         "TopicArn": "arn:aws:sns:eu-west-2:000000000000:hmpps-domain-events", 
-        "Message": "{\"eventType\":\"HMPPS_TIER_CALCULATION_COMPLETE\",\"crn\":\"12345\",\"calculationId\":\"e45559d1-3460-4a0e-8281-c736de57c562\"}", 
+        "Message": "{\"eventType\":\"TIER_CALCULATION_COMPLETE\",\"crn\":\"12345\",\"calculationId\":\"e45559d1-3460-4a0e-8281-c736de57c562\"}", 
         "SubscribeURL": null, 
         "Timestamp": "2021-03-05T11:23:56.031Z", 
         "SignatureVersion": "1", 
