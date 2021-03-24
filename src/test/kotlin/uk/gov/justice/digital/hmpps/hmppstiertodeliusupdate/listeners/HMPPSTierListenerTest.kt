@@ -7,12 +7,9 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyNoMoreInteractions
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
-import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.InvalidMessageException
-import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.courtRegisterInsertMessage
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMessage
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
 import java.util.UUID
@@ -54,24 +51,5 @@ internal class HMPPSTierListenerTest {
 
     verifyZeroInteractions(hmppsTierApiClient)
     verifyZeroInteractions(communityApiClient)
-  }
-
-  @Test
-  internal fun `will not call service for events we don't understand`() {
-    val calculationId = UUID.fromString("e45559d1-3460-4a0e-8281-c736de57c562")
-    val communityApiClient: CommunityApiClient = mock()
-    val telemetryService: TelemetryService = mock()
-    val hmppsTierApiClient: HmppsTierApiClient = mock {
-      on { getTierByCrnAndCalculationId("12345", calculationId) } doReturn "A0"
-    }
-
-    val listener = HMPPSTierListener(communityApiClient = communityApiClient, hmppsTierApiClient = hmppsTierApiClient, telemetryService = telemetryService, gson = gson, enableUpdates = true)
-
-    Assertions.assertThrows(InvalidMessageException::class.java) {
-      listener.onRegisterChange(courtRegisterInsertMessage())
-    }
-
-    verifyZeroInteractions(communityApiClient)
-    verifyZeroInteractions(hmppsTierApiClient)
   }
 }

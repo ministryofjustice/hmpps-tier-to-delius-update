@@ -9,7 +9,6 @@ import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.CommunityApiClient
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.HmppsTierApiClient
-import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client.InvalidMessageException
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryService
 import java.util.UUID
 
@@ -33,13 +32,7 @@ class HMPPSTierListener(
     log.info("Received message ${sqsMessage.MessageId}")
     if (enableUpdates) {
       val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
-      when (changeEvent.eventType) {
-        EventType.TIER_CALCULATION_COMPLETE -> updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
-        else -> {
-          telemetryService.invalidMessage(sqsMessage.MessageId)
-          throw InvalidMessageException("Received a message I wasn't expecting $changeEvent")
-        }
-      }
+      updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
     } else {
       log.info("Updates to Delius disabled, dumping message ${sqsMessage.MessageId}")
     }
@@ -59,14 +52,12 @@ class HMPPSTierListener(
   }
 
   data class TierChangeEvent(
-    val eventType: EventType?,
     val crn: String,
     val calculationId: UUID
   )
 
-  data class SQSMessage(val Message: String, val MessageId: String)
-
-  enum class EventType {
-    TIER_CALCULATION_COMPLETE,
-  }
+  data class SQSMessage(
+    val Message: String,
+    val MessageId: String
+  )
 }
