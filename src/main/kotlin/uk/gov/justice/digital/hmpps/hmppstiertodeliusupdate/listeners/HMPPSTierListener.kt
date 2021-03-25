@@ -28,22 +28,21 @@ class HMPPSTierListener(
   @SqsListener(value = ["\${sqs.queue}"], deletionPolicy = ON_SUCCESS)
   fun onRegisterChange(message: String) {
     val sqsMessage: SQSMessage = gson.fromJson(message, SQSMessage::class.java)
-
     log.info("Received message ${sqsMessage.MessageId}")
-    if (enableUpdates) {
-      val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
-      updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
-    } else {
-      log.info("Updates to Delius disabled, dumping message ${sqsMessage.MessageId}")
-    }
+    val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
+    updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
   }
 
   private fun updateTier(crn: String, calculationId: UUID) {
     try {
       hmppsTierApiClient.getTierByCrnAndCalculationId(crn, calculationId).let {
-        communityApiClient.updateTier(it, crn)
-      }.also {
-        telemetryService.successfulWrite(crn, calculationId)
+        if (enableUpdates) {
+          communityApiClient.updateTier(it, crn).also {
+            telemetryService.successfulWrite(crn, calculationId)
+          }
+        } else {
+          log.info("Updates to Delius disabled, dumping message for $crn, calculationId $calculationId")
+        }
       }
     } catch (e: Exception) {
       telemetryService.failedWrite(crn, calculationId)

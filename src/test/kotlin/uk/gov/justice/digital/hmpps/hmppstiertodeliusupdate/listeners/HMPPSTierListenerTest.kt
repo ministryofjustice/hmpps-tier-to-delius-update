@@ -49,7 +49,9 @@ internal class HMPPSTierListenerTest {
 
     listener.onRegisterChange(tierUpdateMessage())
 
-    verifyZeroInteractions(hmppsTierApiClient)
+    verify(hmppsTierApiClient).getTierByCrnAndCalculationId("12345", calculationId)
+
+    verifyNoMoreInteractions(hmppsTierApiClient)
     verifyZeroInteractions(communityApiClient)
   }
 }
