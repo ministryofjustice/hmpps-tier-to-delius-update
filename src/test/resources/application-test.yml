@@ -23,3 +23,10 @@ hmpps-tier.endpoint.url: http://localhost:8091
 
 flags:
   enableDeliusTierUpdates: true
+
+oauth:
+  endpoint:
+    url: http://localhost:9090/auth
+  client:
+    id: client-id
+    secret: client-secret
