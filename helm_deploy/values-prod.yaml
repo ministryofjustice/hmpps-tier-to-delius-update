@@ -14,4 +14,4 @@ env:
   OAUTH_ROOT_URL: https://sign-in.hmpps.service.justice.gov.uk/auth
   COMMUNITY_ENDPOINT_URL: https://community-api-secure.probation.service.justice.gov.uk/secure
   HMPPS_TIER_ENDPOINT_URL: https://hmpps-tier.hmpps.service.justice.gov.uk
-  FLAGS_ENABLEDELIUSTIERUPDATES: false
+  FLAGS_ENABLEDELIUSTIERUPDATES: true
