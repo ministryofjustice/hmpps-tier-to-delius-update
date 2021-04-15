@@ -33,8 +33,8 @@ class TierTest {
   @Value("\${sqs.queue}")
   lateinit var queue: String
 
-  private var hmppsTier: ClientAndServer = startClientAndServer(8081)
-  private var communityApi: ClientAndServer = startClientAndServer(8082)
+  private var hmppsTier: ClientAndServer = startClientAndServer(8091)
+  private var communityApi: ClientAndServer = startClientAndServer(8092)
 
   @AfterEach
   fun reset() {
