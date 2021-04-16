@@ -1,5 +1,5 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.1"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.6"
   kotlin("plugin.spring") version "1.4.30"
   id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
 }
@@ -24,6 +24,7 @@ dependencies {
 
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
+  testImplementation("org.mock-server:mockserver-netty:5.11.1")
   testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
 }
 
