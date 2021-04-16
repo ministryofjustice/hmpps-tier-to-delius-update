@@ -18,5 +18,15 @@ aws:
 sqs:
   queue: http://localhost:4576/queue/hmpps_tier_to_delius_queue
 
-community.endpoint.url: http://localhost:8082
-hmpps-tier.endpoint.url: http://localhost:8081
+community.endpoint.url: http://localhost:8092
+hmpps-tier.endpoint.url: http://localhost:8091
+
+flags:
+  enableDeliusTierUpdates: true
+
+oauth:
+  endpoint:
+    url: http://localhost:9090/auth
+  client:
+    id: client-id
+    secret: client-secret
