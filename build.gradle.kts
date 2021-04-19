@@ -45,13 +45,6 @@ jacoco {
   toolVersion = "0.8.6"
 }
 
-tasks.jacocoTestReport {
-  reports {
-    xml.isEnabled = false
-    csv.isEnabled = false
-    html.destination = file("$buildDir/reports/coverage")
-  }
-}
 tasks {
   getByName<JacocoReport>("jacocoTestReport") {
     afterEvaluate {
@@ -64,6 +57,12 @@ tasks {
           }
         )
       )
+    }
+    dependsOn("test")
+    reports {
+      xml.isEnabled = false
+      csv.isEnabled = false
+      html.destination = file("$buildDir/reports/coverage")
     }
   }
 }
@@ -81,20 +80,17 @@ tasks {
         )
       )
     }
-  }
-}
-
-tasks.jacocoTestCoverageVerification {
-
-  violationRules {
-    rule {
-      limit {
-        counter = "BRANCH"
-        minimum = BigDecimal(0.66)
-      }
-      limit {
-        counter = "COMPLEXITY"
-        minimum = BigDecimal(0.79)
+    dependsOn("jacocoTestReport")
+    violationRules {
+      rule {
+        limit {
+          counter = "BRANCH"
+          minimum = BigDecimal(0.66)
+        }
+        limit {
+          counter = "COMPLEXITY"
+          minimum = BigDecimal(0.79)
+        }
       }
     }
   }
@@ -103,12 +99,4 @@ tasks.jacocoTestCoverageVerification {
 tasks.named("check") {
   dependsOn(":ktlintCheck")
   finalizedBy("jacocoTestCoverageVerification")
-}
-
-tasks.named("jacocoTestReport") {
-  dependsOn("test")
-}
-
-tasks.named("jacocoTestCoverageVerification") {
-  dependsOn("jacocoTestReport")
 }
