@@ -11,22 +11,18 @@ import java.util.UUID
 @Component
 class HmppsTierApiClient(@Qualifier("hmppsTierWebClientAppScope") private val webClient: WebClient) {
 
-  fun getTierByCrnAndCalculationId(crn: String, calculationId: UUID): String {
-    return getTierByCrnCall(crn, calculationId)
-      .also {
-        log.info("Fetching Tier $calculationId for $crn")
-        log.debug("Body: $it for $crn")
-      }
-  }
+  fun getTierByCrnAndCalculationId(crn: String, calculationId: UUID): String = getTierByCrnCall(crn, calculationId)
+    .also {
+      log.info("Fetching Tier $calculationId for $crn")
+      log.debug("Body: $it for $crn")
+    }
 
-  private fun getTierByCrnCall(crn: String, calculationId: UUID): String {
-    return webClient
-      .get()
-      .uri("/crn/$crn/tier/$calculationId")
-      .retrieve()
-      .bodyToMono(TierDto::class.java)
-      .block()?.tierScore ?: throw EntityNotFoundException("No Tier record $calculationId found for $crn")
-  }
+  private fun getTierByCrnCall(crn: String, calculationId: UUID): String = webClient
+    .get()
+    .uri("/crn/$crn/tier/$calculationId")
+    .retrieve()
+    .bodyToMono(TierDto::class.java)
+    .block()?.tierScore ?: throw EntityNotFoundException("No Tier record $calculationId found for $crn")
 
   companion object {
     private val log = LoggerFactory.getLogger(HmppsTierApiClient::class.java)
@@ -37,3 +33,5 @@ private data class TierDto @JsonCreator constructor(
   @JsonProperty("tierScore")
   val tierScore: String
 )
+
+private class EntityNotFoundException(msg: String) : RuntimeException(msg)
