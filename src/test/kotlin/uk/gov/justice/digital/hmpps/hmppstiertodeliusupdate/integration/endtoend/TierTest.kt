@@ -31,9 +31,23 @@ class TierTest : MockedEndpointsTestBase() {
       .untilAsserted { communityApi.verify(tierWriteback) }
   }
 
+  @Test
+  fun `leaves message on queue if tier calculation cannot be found`() {
+    setupNotFoundTierCalculationResponse()
+    awsSqsClient.sendMessage(queue, tierUpdateMessage())
+    // the message goes back on the queue but is not visible until after the test ends
+    await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
+  }
+
   private fun setupTierCalculationResponse() {
     hmppsTier.`when`(request().withPath("/crn/12345/tier/e45559d1-3460-4a0e-8281-c736de57c562")).respond(
       response().withContentType(APPLICATION_JSON).withBody("{\"tierScore\":\"B3\"}")
+    )
+  }
+
+  private fun setupNotFoundTierCalculationResponse() {
+    hmppsTier.`when`(request().withPath("/crn/12345/tier/e45559d1-3460-4a0e-8281-c736de57c562")).respond(
+      response().withStatusCode(404)
     )
   }
 

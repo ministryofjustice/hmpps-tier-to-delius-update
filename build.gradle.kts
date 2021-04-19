@@ -2,6 +2,7 @@ plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.6"
   kotlin("plugin.spring") version "1.4.30"
   id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
+  jacoco
 }
 
 configurations {
@@ -38,4 +39,44 @@ dependencyManagement {
 
 tasks.register("fix") {
   dependsOn(":ktlintFormat")
+}
+
+jacoco {
+  toolVersion = "0.8.6"
+}
+
+tasks.jacocoTestReport {
+  reports {
+    xml.isEnabled = false
+    csv.isEnabled = false
+    html.destination = file("$buildDir/reports/coverage")
+  }
+}
+
+tasks.jacocoTestCoverageVerification {
+  violationRules {
+    rule {
+      limit {
+        counter = "BRANCH"
+        minimum = BigDecimal(0.39)
+      }
+      limit {
+        counter = "COMPLEXITY"
+        minimum = BigDecimal(0.70)
+      }
+    }
+  }
+}
+
+tasks.named("check") {
+  dependsOn(":ktlintCheck")
+  finalizedBy("jacocoTestCoverageVerification")
+}
+
+tasks.named("jacocoTestReport") {
+  dependsOn("test")
+}
+
+tasks.named("jacocoTestCoverageVerification") {
+  dependsOn("jacocoTestReport")
 }
