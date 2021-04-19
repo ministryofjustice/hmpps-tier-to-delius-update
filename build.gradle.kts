@@ -52,17 +52,49 @@ tasks.jacocoTestReport {
     html.destination = file("$buildDir/reports/coverage")
   }
 }
+tasks {
+  getByName<JacocoReport>("jacocoTestReport") {
+    afterEvaluate {
+      classDirectories.setFrom(
+        files(
+          classDirectories.files.map {
+            fileTree(it) {
+              exclude("**/config/**")
+            }
+          }
+        )
+      )
+    }
+  }
+}
+
+tasks {
+  getByName<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
+    afterEvaluate {
+      classDirectories.setFrom(
+        files(
+          classDirectories.files.map {
+            fileTree(it) {
+              exclude("**/config/**")
+            }
+          }
+        )
+      )
+    }
+  }
+}
 
 tasks.jacocoTestCoverageVerification {
+
   violationRules {
     rule {
       limit {
         counter = "BRANCH"
-        minimum = BigDecimal(0.39)
+        minimum = BigDecimal(0.66)
       }
       limit {
         counter = "COMPLEXITY"
-        minimum = BigDecimal(0.70)
+        minimum = BigDecimal(0.79)
       }
     }
   }
