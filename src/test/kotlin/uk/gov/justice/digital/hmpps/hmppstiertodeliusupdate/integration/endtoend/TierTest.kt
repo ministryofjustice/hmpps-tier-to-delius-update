@@ -1,8 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.integration.endtoend
 
+import org.awaitility.Durations.ONE_HUNDRED_MILLISECONDS
 import org.awaitility.kotlin.await
+import org.awaitility.kotlin.ignoreException
 import org.awaitility.kotlin.matches
 import org.awaitility.kotlin.untilCallTo
+import org.awaitility.kotlin.withPollInterval
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
@@ -19,15 +22,13 @@ class TierTest : MockedEndpointsTestBase() {
   fun `will consume a TIER_CALCULATION_COMPLETE message, retrieve calculation and send update to community-api`() {
     setupTierCalculationResponse()
 
-    val message = tierUpdateMessage()
-
     val tierWriteback = request().withPath("/offenders/crn/12345/tier/B3").withMethod("POST")
     setupTierWriteback(tierWriteback)
-    awsSqsClient.sendMessage(queue, message)
+    awsSqsClient.sendMessage(queue, tierUpdateMessage())
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
-    Thread.sleep(1000L) // need to wait until the processing has finished. There must be a better way
-    communityApi.verify(tierWriteback)
+    (await withPollInterval ONE_HUNDRED_MILLISECONDS).ignoreException(IllegalArgumentException::class)
+      .untilAsserted { communityApi.verify(tierWriteback) }
   }
 
   private fun setupTierCalculationResponse() {
@@ -36,7 +37,7 @@ class TierTest : MockedEndpointsTestBase() {
     )
   }
 
-  private fun setupTierWriteback(tierWriteback: HttpRequest?) {
+  private fun setupTierWriteback(tierWriteback: HttpRequest) {
     communityApi.`when`(tierWriteback).respond(
       response().withStatusCode(200)
     )
