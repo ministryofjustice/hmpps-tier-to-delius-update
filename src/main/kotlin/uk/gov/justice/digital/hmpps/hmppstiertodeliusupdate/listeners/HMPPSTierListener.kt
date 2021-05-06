@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.listeners
 import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener
 import org.springframework.stereotype.Service
@@ -18,7 +17,7 @@ class HMPPSTierListener(
   private val hmppsTierApiClient: HmppsTierApiClient,
   private val telemetryService: TelemetryService,
   private val gson: Gson
-  ) {
+) {
 
   companion object {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
@@ -35,9 +34,9 @@ class HMPPSTierListener(
   private fun updateTier(crn: String, calculationId: UUID) {
     try {
       hmppsTierApiClient.getTierByCrnAndCalculationId(crn, calculationId).let {
-          communityApiClient.updateTier(it, crn).also {
-            telemetryService.successfulWrite(crn, calculationId)
-          }
+        communityApiClient.updateTier(it, crn).also {
+          telemetryService.successfulWrite(crn, calculationId)
+        }
       }
     } catch (e: Exception) {
       telemetryService.failedWrite(crn, calculationId)
