@@ -12,15 +12,6 @@ class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) 
     telemetryClient.trackEvent(eventType.eventName, customDimensions, null)
   }
 
-  fun invalidMessage(messageId: String) {
-    trackEvent(
-      TelemetryEventType.TIER_UPDATE_INVALID_MESSAGE,
-      mapOf(
-        "messageId" to messageId
-      )
-    )
-  }
-
   fun successfulWrite(crn: String, calculationId: UUID) {
     trackEvent(
       TelemetryEventType.TIER_UPDATE_CALL_SUCCESS,

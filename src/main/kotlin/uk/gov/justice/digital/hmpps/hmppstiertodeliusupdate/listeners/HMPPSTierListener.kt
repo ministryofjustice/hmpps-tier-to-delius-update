@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.listeners
 import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS
 import org.springframework.cloud.aws.messaging.listener.annotation.SqsListener
 import org.springframework.stereotype.Service
@@ -17,8 +16,7 @@ class HMPPSTierListener(
   private val communityApiClient: CommunityApiClient,
   private val hmppsTierApiClient: HmppsTierApiClient,
   private val telemetryService: TelemetryService,
-  private val gson: Gson,
-  @Value("\${flags.enableDeliusTierUpdates}") private val enableUpdates: Boolean
+  private val gson: Gson
 ) {
 
   companion object {
@@ -36,12 +34,8 @@ class HMPPSTierListener(
   private fun updateTier(crn: String, calculationId: UUID) {
     try {
       hmppsTierApiClient.getTierByCrnAndCalculationId(crn, calculationId).let {
-        if (enableUpdates) {
-          communityApiClient.updateTier(it, crn).also {
-            telemetryService.successfulWrite(crn, calculationId)
-          }
-        } else {
-          log.info("Updates to Delius disabled, dumping message for $crn, calculationId $calculationId")
+        communityApiClient.updateTier(it, crn).also {
+          telemetryService.successfulWrite(crn, calculationId)
         }
       }
     } catch (e: Exception) {

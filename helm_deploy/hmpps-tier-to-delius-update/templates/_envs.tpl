@@ -34,9 +34,6 @@ env:
   - name: HMPPS_TIER_ENDPOINT_URL
     value: "{{ .Values.env.HMPPS_TIER_ENDPOINT_URL }}"
 
-  - name: FLAGS_ENABLEDELIUSTIERUPDATES
-    value: "{{ .Values.env.FLAGS_ENABLEDELIUSTIERUPDATES }}"
-
   - name: SPRING_PROFILES_ACTIVE
     value: "aws,logstash,stdout"
 
