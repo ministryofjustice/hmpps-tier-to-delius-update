@@ -17,9 +17,8 @@ class HMPPSTierListener(
   private val communityApiClient: CommunityApiClient,
   private val hmppsTierApiClient: HmppsTierApiClient,
   private val telemetryService: TelemetryService,
-  private val gson: Gson,
-  @Value("\${flags.enableDeliusTierUpdates}") private val enableUpdates: Boolean
-) {
+  private val gson: Gson
+  ) {
 
   companion object {
     val log: Logger = LoggerFactory.getLogger(this::class.java)
@@ -36,13 +35,9 @@ class HMPPSTierListener(
   private fun updateTier(crn: String, calculationId: UUID) {
     try {
       hmppsTierApiClient.getTierByCrnAndCalculationId(crn, calculationId).let {
-        if (enableUpdates) {
           communityApiClient.updateTier(it, crn).also {
             telemetryService.successfulWrite(crn, calculationId)
           }
-        } else {
-          log.info("Updates to Delius disabled, dumping message for $crn, calculationId $calculationId")
-        }
       }
     } catch (e: Exception) {
       telemetryService.failedWrite(crn, calculationId)
