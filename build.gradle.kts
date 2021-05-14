@@ -17,6 +17,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+  implementation("org.springframework.retry:spring-retry")
 
   implementation("com.google.code.gson:gson:2.8.6")
   implementation("org.springframework:spring-jms")

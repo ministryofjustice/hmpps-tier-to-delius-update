@@ -2,12 +2,14 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.client
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 
 @Component
 class CommunityApiClient(@Qualifier("communityWebClientAppScope") private val webClient: WebClient) {
 
+  @Retryable
   fun updateTier(tier: String, crn: String) {
     return updateTierCall(tier, crn)
       .also {
