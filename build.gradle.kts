@@ -3,6 +3,7 @@ plugins {
   kotlin("plugin.spring") version "1.5.0"
   id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
   jacoco
+  id("io.gitlab.arturbosch.detekt").version("1.17.1")
 }
 
 configurations {
@@ -99,4 +100,16 @@ tasks {
 tasks.named("check") {
   dependsOn(":ktlintCheck")
   finalizedBy("jacocoTestCoverageVerification")
+}
+
+detekt {
+  config = files("src/test/resources/detekt-config.yml")
+  buildUponDefaultConfig = true
+  ignoreFailures = true
+}
+
+tasks {
+  getByName("check") {
+    dependsOn(":ktlintCheck", "detekt")
+  }
 }
