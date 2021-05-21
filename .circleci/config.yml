@@ -35,11 +35,7 @@ jobs:
           command: curl -4 --connect-timeout 30 --retry-connrefused --retry 20 --retry-delay 5 http://localhost:4575
       - run:
           name: Set up queues
-          command: src/test/resources/localstack/setup-sns.sh
-      - restore_cache:
-          keys:
-            - gradle-{{ checksum "build.gradle.kts" }}
-            - gradle-
+          command: src/test/resources/localstack/setup-sns.sh 
       - run:
           command: ./gradlew check
       - save_cache:
