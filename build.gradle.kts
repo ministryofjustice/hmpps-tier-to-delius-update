@@ -95,6 +95,15 @@ tasks {
       }
     }
   }
+  getByName("check") {
+    dependsOn(":ktlintCheck", "detekt")
+  }
+
+  compileKotlin {
+    kotlinOptions {
+      jvmTarget = "16"
+    }
+  }
 }
 
 tasks.named("check") {
@@ -108,8 +117,3 @@ detekt {
   ignoreFailures = true
 }
 
-tasks {
-  getByName("check") {
-    dependsOn(":ktlintCheck", "detekt")
-  }
-}

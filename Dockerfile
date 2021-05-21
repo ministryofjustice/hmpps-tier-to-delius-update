@@ -30,4 +30,4 @@ COPY --from=builder --chown=appuser:appgroup /app/applicationinsights.json /app
 
 USER 2000
 
-ENTRYPOINT ["java", "-javaagent:/app/agent.jar", "--add-opens java.base/java.util=ALL-UNNAMED", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-javaagent:/app/agent.jar", "-jar", "/app/app.jar"]
