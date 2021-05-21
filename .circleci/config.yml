@@ -7,7 +7,7 @@ orbs:
 executors:
   validator-integration:
     docker:
-      - image: circleci/openjdk:11-jdk
+      - image: cimg/openjdk:16.0
       - image: localstack/localstack:0.11.2
         environment:
           - SERVICES=sqs,sns
@@ -116,4 +116,6 @@ workflows:
                 - main
     jobs:
       - owasp/gradle_owasp_dependency_check:
-          executor: hmpps/java
+          executor:
+            name: hmpps/java
+            tag: "16.0"
