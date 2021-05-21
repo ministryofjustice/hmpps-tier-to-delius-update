@@ -1,6 +1,6 @@
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.1.6"
-  kotlin("plugin.spring") version "1.4.30"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.2.0"
+  kotlin("plugin.spring") version "1.5.0"
   id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
   jacoco
 }
@@ -42,7 +42,7 @@ tasks.register("fix") {
 }
 
 jacoco {
-  toolVersion = "0.8.6"
+  toolVersion = "0.8.7"
 }
 
 tasks {
