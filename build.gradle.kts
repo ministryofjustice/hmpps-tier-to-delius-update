@@ -116,4 +116,3 @@ detekt {
   buildUponDefaultConfig = true
   ignoreFailures = true
 }
-
