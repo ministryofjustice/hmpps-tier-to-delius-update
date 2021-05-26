@@ -22,7 +22,7 @@ class HmppsTierApiClient(@Qualifier("hmppsTierWebClientAppScope") private val we
     .uri("/crn/$crn/tier/$calculationId")
     .retrieve()
     .bodyToMono(TierDto::class.java)
-    .block()?.tierScore ?: throw EntityNotFoundException("No Tier record $calculationId found for $crn")
+    .block()!!.tierScore
 
   companion object {
     private val log = LoggerFactory.getLogger(HmppsTierApiClient::class.java)
@@ -33,5 +33,3 @@ private data class TierDto @JsonCreator constructor(
   @JsonProperty("tierScore")
   val tierScore: String
 )
-
-private class EntityNotFoundException(msg: String) : RuntimeException(msg)

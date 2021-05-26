@@ -3,16 +3,16 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.integration.endtoen
 import com.amazonaws.services.sqs.AmazonSQS
 import com.amazonaws.services.sqs.model.PurgeQueueRequest
 import com.google.gson.Gson
-import org.awaitility.kotlin.await
-import org.awaitility.kotlin.matches
-import org.awaitility.kotlin.untilCallTo
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.mockserver.integration.ClientAndServer
-import org.mockserver.model.HttpRequest
-import org.mockserver.model.HttpResponse
-import org.mockserver.model.MediaType
+import org.mockserver.integration.ClientAndServer.startClientAndServer
+import org.mockserver.model.HttpRequest.request
+import org.mockserver.model.HttpResponse.response
+import org.mockserver.model.MediaType.APPLICATION_JSON
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
@@ -21,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles
 
 @SpringBootTest()
 @ActiveProfiles("test")
+@TestInstance(PER_CLASS)
 abstract class MockedEndpointsTestBase {
   @Qualifier("awsSqsClient")
   @Autowired
@@ -29,17 +30,16 @@ abstract class MockedEndpointsTestBase {
   @Value("\${sqs.queue}")
   lateinit var queue: String
 
-  var hmppsTier: ClientAndServer = ClientAndServer.startClientAndServer(8091)
-  var communityApi: ClientAndServer = ClientAndServer.startClientAndServer(8092)
+  var hmppsTier: ClientAndServer = startClientAndServer(8091)
+  var communityApi: ClientAndServer = startClientAndServer(8092)
 
-  private var oauthMock: ClientAndServer = ClientAndServer.startClientAndServer(9090)
+  private var oauthMock: ClientAndServer = startClientAndServer(9090)
 
   private val gson: Gson = Gson()
 
   @BeforeEach
   fun before() {
     awsSqsClient.purgeQueue(PurgeQueueRequest(queue))
-    await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
     setupOauth()
   }
 
@@ -48,6 +48,7 @@ abstract class MockedEndpointsTestBase {
     hmppsTier.reset()
     communityApi.reset()
     oauthMock.reset()
+    awsSqsClient.purgeQueue(PurgeQueueRequest(queue))
   }
 
   @AfterAll
@@ -58,9 +59,9 @@ abstract class MockedEndpointsTestBase {
   }
 
   fun setupOauth() {
-    val response = HttpResponse.response().withContentType(MediaType.APPLICATION_JSON)
+    val response = response().withContentType(APPLICATION_JSON)
       .withBody(gson.toJson(mapOf("access_token" to "ABCDE", "token_type" to "bearer")))
-    oauthMock.`when`(HttpRequest.request().withPath("/auth/oauth/token").withBody("grant_type=client_credentials")).respond(response)
+    oauthMock.`when`(request().withPath("/auth/oauth/token").withBody("grant_type=client_credentials")).respond(response)
   }
 
   fun getNumberOfMessagesCurrentlyOnQueue(): Int? {
