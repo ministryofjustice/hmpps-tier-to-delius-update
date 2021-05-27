@@ -7,15 +7,14 @@ import org.awaitility.kotlin.matches
 import org.awaitility.kotlin.untilCallTo
 import org.awaitility.kotlin.withPollInterval
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpRequest.request
+import org.mockserver.model.HttpResponse.notFoundResponse
 import org.mockserver.model.HttpResponse.response
 import org.mockserver.model.MediaType.APPLICATION_JSON
+import org.mockserver.model.RequestDefinition
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMessage
 
-@TestInstance(PER_CLASS)
 class TierTest : MockedEndpointsTestBase() {
 
   @Test
@@ -33,22 +32,26 @@ class TierTest : MockedEndpointsTestBase() {
 
   @Test
   fun `leaves message on queue if tier calculation cannot be found`() {
-    setupNotFoundTierCalculationResponse()
+    var notFoundRequest = setupNotFoundTierCalculationResponse()
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
-    // the message goes back on the queue but is not visible until after the test ends
-    await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
+    Thread.sleep(1000L)
+    hmppsTier.verify(notFoundRequest)
   }
 
   private fun setupTierCalculationResponse() {
-    hmppsTier.`when`(request().withPath("/crn/12345/tier/e45559d1-3460-4a0e-8281-c736de57c562")).respond(
+    val request = request().withPath("/crn/12345/tier/e45559d1-3460-4a0e-8281-c736de57c562")
+    hmppsTier.`when`(request).respond(
       response().withContentType(APPLICATION_JSON).withBody("{\"tierScore\":\"B3\"}")
     )
   }
 
-  private fun setupNotFoundTierCalculationResponse() {
-    hmppsTier.`when`(request().withPath("/crn/12345/tier/e45559d1-3460-4a0e-8281-c736de57c562")).respond(
-      response().withStatusCode(404)
+  private fun setupNotFoundTierCalculationResponse(): RequestDefinition {
+    val request = request().withPath("/crn/12345/tier/e45559d1-3460-4a0e-8281-c736de57c562")
+
+    hmppsTier.`when`(request).respond(
+      notFoundResponse()
     )
+    return request
   }
 
   private fun setupTierWriteback(tierWriteback: HttpRequest) {

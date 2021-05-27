@@ -9,3 +9,11 @@ Run this application with the following configuration:
 
 SPRING_PROFILES_ACTIVE=dev,localstack;SERVER_PORT=8099
 
+## testing
+
+Requires localstack to be running, so
+
+```shell
+docker compose up localstack
+./gradlew check
+```

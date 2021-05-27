@@ -1,3 +1,5 @@
+
+
 plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.2.1"
   kotlin("plugin.spring") version "1.5.0"
@@ -86,11 +88,11 @@ tasks {
       rule {
         limit {
           counter = "BRANCH"
-          minimum = BigDecimal(0.50)
+          minimum = BigDecimal(0.99)
         }
         limit {
           counter = "COMPLEXITY"
-          minimum = BigDecimal(0.79)
+          minimum = BigDecimal(0.88)
         }
       }
     }
