@@ -14,11 +14,13 @@ import org.mockserver.model.HttpResponse.response
 import org.mockserver.model.MediaType.APPLICATION_JSON
 import org.mockserver.model.RequestDefinition
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMessage
+import java.nio.file.Files
+import java.nio.file.Paths
 
 internal class TierTest : MockedEndpointsTestBase() {
 
   @Test
-  fun `will consume a TIER_CALCULATION_COMPLETE message, retrieve calculation and send update to community-api`() {
+  fun `consumes a TIER_CALCULATION_COMPLETE message, retrieve calculation and send update to community-api`() {
     setupTierCalculationResponse()
 
     val tierWriteback = request().withPath("/offenders/crn/12345/tier/B3").withMethod("POST")
@@ -28,6 +30,21 @@ internal class TierTest : MockedEndpointsTestBase() {
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
     (await withPollInterval ONE_HUNDRED_MILLISECONDS).ignoreException(IllegalArgumentException::class)
       .untilAsserted { communityApi.verify(tierWriteback) }
+  }
+
+  @Test
+  fun `removes message from queue by returning success when offender cannot be found in community-api`() {
+    setupTierCalculationResponse()
+
+    val tierWriteback = request().withPath("/offenders/crn/12345/tier/B3").withMethod("POST")
+    setupTierWritebackNotFound(tierWriteback)
+    awsSqsClient.sendMessage(queue, tierUpdateMessage())
+
+    await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
+    (await withPollInterval ONE_HUNDRED_MILLISECONDS).ignoreException(IllegalArgumentException::class)
+      .untilAsserted { communityApi.verify(tierWriteback) }
+    await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
+    await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 0 }
   }
 
   @Test
@@ -59,4 +76,13 @@ internal class TierTest : MockedEndpointsTestBase() {
       response().withStatusCode(200)
     )
   }
+
+  private fun setupTierWritebackNotFound(tierWriteback: HttpRequest) {
+    communityApi.`when`(tierWriteback).respond(
+      response().withStatusCode(404).withBody(responseFrom("src/test/resources/fixtures/community-api/404.json"))
+    )
+  }
+
+  private fun responseFrom(path: String) =
+    Files.readString(Paths.get(path))
 }

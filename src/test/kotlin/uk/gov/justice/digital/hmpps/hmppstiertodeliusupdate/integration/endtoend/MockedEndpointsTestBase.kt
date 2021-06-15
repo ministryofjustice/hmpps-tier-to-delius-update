@@ -68,4 +68,9 @@ internal abstract class MockedEndpointsTestBase {
     val queueAttributes = awsSqsClient.getQueueAttributes(queue, listOf("ApproximateNumberOfMessages"))
     return queueAttributes.attributes["ApproximateNumberOfMessages"]?.toInt()
   }
+
+  fun getNumberOfMessagesCurrentlyNotVisibleOnQueue(): Int? {
+    val queueAttributes = awsSqsClient.getQueueAttributes(queue, listOf("ApproximateNumberOfMessagesNotVisible"))
+    return queueAttributes.attributes["ApproximateNumberOfMessagesNotVisible"]?.toInt()
+  }
 }
