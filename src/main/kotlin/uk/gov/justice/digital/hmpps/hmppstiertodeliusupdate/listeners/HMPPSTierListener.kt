@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.listeners
 
 import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cloud.aws.messaging.listener.SqsMessageDeletionPolicy.ON_SUCCESS
@@ -26,8 +27,7 @@ class HMPPSTierListener(
   @SqsListener(value = ["\${sqs.queue}"], deletionPolicy = ON_SUCCESS)
   fun onRegisterChange(message: String) {
     val sqsMessage: SQSMessage = gson.fromJson(message, SQSMessage::class.java)
-    log.info("Received message ${sqsMessage.MessageId}")
-    val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.Message, TierChangeEvent::class.java)
+    val changeEvent: TierChangeEvent = gson.fromJson(sqsMessage.message, TierChangeEvent::class.java)
     updateTier(crn = changeEvent.crn, calculationId = changeEvent.calculationId)
   }
 
@@ -44,13 +44,10 @@ class HMPPSTierListener(
     }
   }
 
-  data class TierChangeEvent(
+  private data class TierChangeEvent(
     val crn: String,
     val calculationId: UUID
   )
 
-  data class SQSMessage(
-    val Message: String,
-    val MessageId: String
-  )
+  private data class SQSMessage(@SerializedName("Message") val message: String)
 }
