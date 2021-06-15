@@ -22,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest()
 @ActiveProfiles("test")
 @TestInstance(PER_CLASS)
-abstract class MockedEndpointsTestBase {
+internal abstract class MockedEndpointsTestBase {
   @Qualifier("awsSqsClient")
   @Autowired
   internal lateinit var awsSqsClient: AmazonSQS
@@ -67,10 +67,5 @@ abstract class MockedEndpointsTestBase {
   fun getNumberOfMessagesCurrentlyOnQueue(): Int? {
     val queueAttributes = awsSqsClient.getQueueAttributes(queue, listOf("ApproximateNumberOfMessages"))
     return queueAttributes.attributes["ApproximateNumberOfMessages"]?.toInt()
-  }
-
-  fun getNumberOfMessagesCurrentlyNotVisibleOnQueue(): Int? {
-    val queueAttributes = awsSqsClient.getQueueAttributes(queue, listOf("ApproximateNumberOfMessagesNotVisible"))
-    return queueAttributes.attributes["ApproximateNumberOfMessagesNotVisible"]?.toInt()
   }
 }

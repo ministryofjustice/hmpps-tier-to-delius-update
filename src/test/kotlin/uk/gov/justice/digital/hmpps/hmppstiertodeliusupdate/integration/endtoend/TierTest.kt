@@ -15,7 +15,7 @@ import org.mockserver.model.MediaType.APPLICATION_JSON
 import org.mockserver.model.RequestDefinition
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMessage
 
-class TierTest : MockedEndpointsTestBase() {
+internal class TierTest : MockedEndpointsTestBase() {
 
   @Test
   fun `will consume a TIER_CALCULATION_COMPLETE message, retrieve calculation and send update to community-api`() {
