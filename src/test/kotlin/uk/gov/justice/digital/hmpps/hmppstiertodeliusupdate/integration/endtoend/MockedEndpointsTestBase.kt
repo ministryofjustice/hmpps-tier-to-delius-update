@@ -22,7 +22,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest()
 @ActiveProfiles("test")
 @TestInstance(PER_CLASS)
-abstract class MockedEndpointsTestBase {
+internal abstract class MockedEndpointsTestBase {
   @Qualifier("awsSqsClient")
   @Autowired
   internal lateinit var awsSqsClient: AmazonSQS
