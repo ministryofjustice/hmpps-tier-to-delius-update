@@ -37,7 +37,7 @@ internal class TierTest : MockedEndpointsTestBase() {
     setupTierCalculationResponse()
 
     val tierWriteback = request().withPath("/offenders/crn/12345/tier/B3").withMethod("POST")
-    setupTierWritebackNotFound(tierWriteback)
+    setupTierWritebackOffenderNotFound(tierWriteback)
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
@@ -48,11 +48,26 @@ internal class TierTest : MockedEndpointsTestBase() {
   }
 
   @Test
+  fun `leaves message on queue when not found response from community-api not related to offender`() {
+    setupTierCalculationResponse()
+
+    val tierWriteback = request().withPath("/offenders/crn/12345/tier/B3").withMethod("POST")
+    setupTierWritebackReasonNotFound(tierWriteback)
+    awsSqsClient.sendMessage(queue, tierUpdateMessage())
+
+    await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
+    (await withPollInterval ONE_HUNDRED_MILLISECONDS).ignoreException(IllegalArgumentException::class)
+      .untilAsserted { communityApi.verify(tierWriteback) }
+    await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
+  }
+
+  @Test
   fun `leaves message on queue if tier calculation cannot be found`() {
     var notFoundRequest = setupNotFoundTierCalculationResponse()
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
     Thread.sleep(1000L)
     hmppsTier.verify(notFoundRequest)
+    await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
   }
 
   private fun setupTierCalculationResponse() {
@@ -77,9 +92,15 @@ internal class TierTest : MockedEndpointsTestBase() {
     )
   }
 
-  private fun setupTierWritebackNotFound(tierWriteback: HttpRequest) {
+  private fun setupTierWritebackOffenderNotFound(tierWriteback: HttpRequest) {
     communityApi.`when`(tierWriteback).respond(
-      response().withStatusCode(404).withBody(responseFrom("src/test/resources/fixtures/community-api/404.json"))
+      response().withStatusCode(404).withBody(responseFrom("src/test/resources/fixtures/community-api/offender-404.json"))
+    )
+  }
+
+  private fun setupTierWritebackReasonNotFound(tierWriteback: HttpRequest) {
+    communityApi.`when`(tierWriteback).respond(
+      response().withStatusCode(404).withBody(responseFrom("src/test/resources/fixtures/community-api/reason-404.json"))
     )
   }
 
