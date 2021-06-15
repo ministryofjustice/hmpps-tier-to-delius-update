@@ -40,7 +40,7 @@ class HMPPSTierListener(
         }
       }
     } catch (e: WebClientResponseException.NotFound) {
-      if (e.responseBodyAsString.contains("Offender with CRN %s not found".format(crn))) {
+      if (e.responseBodyAsString.contains("Offender with CRN $crn not found")) {
         telemetryService.offenderNotFoundFailedWrite(crn, calculationId)
       } else {
         telemetryService.failedWrite(crn, calculationId)
