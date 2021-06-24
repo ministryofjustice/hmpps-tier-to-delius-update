@@ -40,10 +40,6 @@ dependencyManagement {
   }
 }
 
-tasks.register("fix") {
-  dependsOn(":ktlintFormat")
-}
-
 jacoco {
   toolVersion = "0.8.7"
 }
