@@ -35,10 +35,10 @@ class AwsLocalStackConfiguration(
   @Bean
   fun simpleMessageListenerContainerFactory(amazonSQSAsync: AmazonSQSAsync):
     SimpleMessageListenerContainerFactory {
-      val factory = SimpleMessageListenerContainerFactory()
-      factory.setAmazonSqs(amazonSQSAsync)
-      factory.setMaxNumberOfMessages(1)
-      factory.setWaitTimeOut(5)
-      return factory
-    }
+    val factory = SimpleMessageListenerContainerFactory()
+    factory.setAmazonSqs(amazonSQSAsync)
+    factory.setMaxNumberOfMessages(1)
+    factory.setWaitTimeOut(5)
+    return factory
+  }
 }
