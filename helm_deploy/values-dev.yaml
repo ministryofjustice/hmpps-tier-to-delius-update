@@ -2,6 +2,6 @@
 generic-service:
   env:
     SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://sign-in-dev.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json
-    OAUTH_ROOT_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+    OAUTH_ENDPOINT_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     COMMUNITY_ENDPOINT_URL: https://community-api-secure.test.delius.probation.hmpps.dsd.io/secure
     HMPPS_TIER_ENDPOINT_URL:  https://hmpps-tier-dev.hmpps.service.justice.gov.uk
