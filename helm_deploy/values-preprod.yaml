@@ -1,16 +1,7 @@
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-replicaCount: 1
-
-image:
-  repository: quay.io/hmpps/hmpps-tier-to-delius-update
-  tag: latest
-  port: 8080
-
-env:
-  JAVA_OPTS: "-Xmx512m"
-  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json
-  OAUTH_ROOT_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth/
-  COMMUNITY_ENDPOINT_URL: https://community-api-secure.pre-prod.delius.probation.hmpps.dsd.io/secure
-  HMPPS_TIER_ENDPOINT_URL: https://hmpps-tier-preprod.hmpps.service.justice.gov.uk
+---
+generic-service:
+  env:
+    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth/.well-known/jwks.json
+    OAUTH_ROOT_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth/
+    COMMUNITY_ENDPOINT_URL: https://community-api-secure.pre-prod.delius.probation.hmpps.dsd.io/secure
+    HMPPS_TIER_ENDPOINT_URL: https://hmpps-tier-preprod.hmpps.service.justice.gov.uk

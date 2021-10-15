@@ -1,0 +1,40 @@
+---
+generic-service:
+  nameOverride: hmpps-tier-to-delius-update
+
+  replicaCount: 1
+
+  image:
+    repository: quay.io/hmpps/hmpps-tier-to-delius-update
+    tag: app_version    # override at deployment time
+    port: 8080
+
+  ingress:
+    enabled: false
+
+  # Environment variables to load into the deployment
+  env:
+    JAVA_OPTS: "-Xmx512m"
+    SERVER_PORT: "8080"
+    SPRING_PROFILES_ACTIVE: "aws,logstash,stdout"
+    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY)"
+    APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
+
+  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
+  # namespace_secrets:
+  #   [name of kubernetes secret]:
+  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+
+  namespace_secrets:
+    hmpps-tier-to-delius-update:
+      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+      OAUTH_CLIENT_ID: "OAUTH_CLIENT_ID"
+      OAUTH_CLIENT_SECRET: "OAUTH_CLIENT_SECRET"
+    sqs-tier-to-delius-update-secret:
+      AWS_PROBATION_EVENTS_ACCESS_KEY: "access_key_id"
+      AWS_PROBATION_EVENTS_SECRET_ACCESS_KEY: "secret_access_key"
+      AWS_PROBATION_EVENTS_QUEUE: "sqs_queue_url"
+
+generic-prometheus-alerts:
+  targetApplication: hmpps-tier-to-delius-update
+  alertSeverity: hmpps-tier
