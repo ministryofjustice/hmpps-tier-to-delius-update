@@ -22,7 +22,6 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
   implementation("com.google.code.gson:gson:2.8.6")
-  implementation("org.springframework:spring-jms")
 
   implementation("org.springframework.cloud:spring-cloud-aws-messaging")
 
