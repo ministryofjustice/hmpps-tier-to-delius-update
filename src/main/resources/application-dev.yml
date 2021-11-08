@@ -8,12 +8,17 @@ spring:
 server:
   shutdown: immediate
 
-aws:
+hmpps.sqs:
   provider: localstack
-
-sqs:
-  endpoint:
-    url: http://localhost:4576
+  queues:
+    tiercalculationqueue:
+      dlqName: tier-calculation-queue-dl
+      queueName: tier-calculation-queue
+      subscribeTopicId: tiercalculationtopic
+      subscribeFilter: '{"eventType":[ "TIER_CALCULATION_COMPLETE"] }'
+  topics:
+    tiercalculationtopic:
+      arn: arn:aws:sns:eu-west-2:000000000000:${random.uuid}
 
 community:
   endpoint:

@@ -12,11 +12,17 @@ management.endpoint:
   health.cache.time-to-live: 0
   info.cache.time-to-live: 0
 
-aws:
+hmpps.sqs:
   provider: localstack
-
-sqs:
-  queue: http://localhost:4576/queue/hmpps_tier_to_delius_queue
+  queues:
+    tiercalculationqueue:
+      dlqName: tier-calculation-queue-dl
+      queueName: tier-calculation-queue
+      subscribeTopicId: tiercalculationtopic
+      subscribeFilter: '{"eventType":[ "TIER_CALCULATION_COMPLETE"] }'
+  topics:
+    tiercalculationtopic:
+      arn: arn:aws:sns:eu-west-2:000000000000:${random.uuid}
 
 community.endpoint.url: http://localhost:8092
 hmpps-tier.endpoint.url: http://localhost:8091

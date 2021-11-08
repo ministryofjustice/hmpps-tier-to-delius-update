@@ -14,6 +14,6 @@ SPRING_PROFILES_ACTIVE=dev,localstack;SERVER_PORT=8099
 Requires localstack to be running, so
 
 ```shell
-docker compose up localstack
+docker compose up -d localstack
 ./gradlew check
 ```

@@ -1,4 +1,0 @@
-aws:
-  probation:
-    events:
-      queue: http://localhost:4576/queue/Digital-Prison-Services-dev-hmpps_tier_calculation_complete_queue

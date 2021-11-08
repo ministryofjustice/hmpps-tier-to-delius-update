@@ -15,20 +15,24 @@ import org.mockserver.model.HttpResponse.response
 import org.mockserver.model.MediaType.APPLICATION_JSON
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.context.ActiveProfiles
+import uk.gov.justice.hmpps.sqs.HmppsQueueService
+import uk.gov.justice.hmpps.sqs.MissingQueueException
 
 @SpringBootTest()
 @ActiveProfiles("test")
 @TestInstance(PER_CLASS)
 internal abstract class MockedEndpointsTestBase {
-  @Qualifier("awsSqsClient")
+
+  @Qualifier("tiercalculationqueue-sqs-client")
   @Autowired
   internal lateinit var awsSqsClient: AmazonSQS
 
-  @Value("\${sqs.queue}")
-  lateinit var queue: String
+  protected val queue by lazy { hmppsQueueService.findByQueueId("tiercalculationqueue")?.queueUrl ?: throw MissingQueueException("HmppsQueue tiercalculationqueue not found") }
+
+  @Autowired
+  protected lateinit var hmppsQueueService: HmppsQueueService
 
   var hmppsTier: ClientAndServer = startClientAndServer(8091)
   var communityApi: ClientAndServer = startClientAndServer(8092)
