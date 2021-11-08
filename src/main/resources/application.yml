@@ -71,17 +71,5 @@ management:
       cache:
         time-to-live: 2000ms
 
-aws:
-  provider: aws
-  region: eu-west-2
-
-sqs:
-  probation:
-    access-key-id: ${aws.probation.events.access.key}
-    secret-access-key: ${aws.probation.events.secret.access.key}
-  provider: ${aws.provider}
-  queue: ${aws.probation.events.queue}
-  endpoint.region: ${aws.region}
-
 flags:
   enableDeliusTierUpdates: false

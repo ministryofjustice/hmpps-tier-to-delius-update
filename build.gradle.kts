@@ -24,6 +24,7 @@ dependencies {
   implementation("com.google.code.gson:gson:2.8.6")
 
   implementation("org.springframework.cloud:spring-cloud-aws-messaging")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:1.0.3")
 
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 

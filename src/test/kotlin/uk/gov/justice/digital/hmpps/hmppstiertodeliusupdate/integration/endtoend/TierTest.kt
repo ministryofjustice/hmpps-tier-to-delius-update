@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.integration.endtoend
 
 import org.awaitility.Durations.ONE_HUNDRED_MILLISECONDS
+import org.awaitility.Durations.ONE_MILLISECOND
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.ignoreException
 import org.awaitility.kotlin.matches
@@ -56,7 +57,7 @@ internal class TierTest : MockedEndpointsTestBase() {
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
-    (await withPollInterval ONE_HUNDRED_MILLISECONDS).ignoreException(IllegalArgumentException::class)
+    (await withPollInterval ONE_MILLISECOND).ignoreException(IllegalArgumentException::class)
       .untilAsserted { communityApi.verify(tierWriteback) }
     await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
   }
@@ -70,17 +71,17 @@ internal class TierTest : MockedEndpointsTestBase() {
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
-    (await withPollInterval ONE_HUNDRED_MILLISECONDS).ignoreException(IllegalArgumentException::class)
+    (await withPollInterval ONE_MILLISECOND).ignoreException(IllegalArgumentException::class)
       .untilAsserted { communityApi.verify(tierWriteback) }
     await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
   }
 
   @Test
   fun `leaves message on queue if tier calculation cannot be found`() {
-    var notFoundRequest = setupNotFoundTierCalculationResponse()
+    val notFoundRequest = setupNotFoundTierCalculationResponse()
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
-    Thread.sleep(1000L)
-    hmppsTier.verify(notFoundRequest)
+    (await withPollInterval ONE_MILLISECOND).ignoreException(IllegalArgumentException::class)
+      .untilAsserted { hmppsTier.verify(notFoundRequest) }
     await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
   }
 

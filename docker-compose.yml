@@ -9,14 +9,15 @@ services:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
     environment:
       - SERVER_PORT=8080
-      - SPRING_PROFILES_ACTIVE=dev,localstack
+      - SPRING_PROFILES_ACTIVE=dev
+      - HMPPS_SQS_LOCALSTACKURL=http://localstack
   localstack:
-    image: localstack/localstack:0.11.2
+    image: localstack/localstack:0.12.20
     networks:
       - hmpps
     container_name: hmpps-tier-to-delius-update-localstack
     ports:
-      - "4566-4597:4566-4597"
+      - "4566:4566"
       - 8999:8080
     environment:
       - SERVICES=sqs,sns
@@ -26,7 +27,6 @@ services:
     volumes:
       - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
-      - $PWD/src/test/resources/localstack:/docker-entrypoint-initaws.d
 
 networks:
   hmpps:
