@@ -31,14 +31,6 @@ dependencies {
   testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
 }
 
-extra["springCloudVersion"] = "Hoxton.SR8"
-
-dependencyManagement {
-  imports {
-    mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
-  }
-}
-
 jacoco {
   toolVersion = "0.8.7"
 }
