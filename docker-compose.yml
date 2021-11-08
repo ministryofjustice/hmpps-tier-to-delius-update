@@ -1,16 +1,5 @@
 version: "3"
 services:
-  hmpps-tier-to-delius-update:
-    image: quay.io/hmpps/hmpps-tier-to-delius-update:latest
-    container_name: hmpps-tier-to-delius-update
-    ports:
-      - "8081:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health/ping"]
-    environment:
-      - SERVER_PORT=8080
-      - SPRING_PROFILES_ACTIVE=dev
-      - HMPPS_SQS_LOCALSTACKURL=http://localstack
   localstack:
     image: localstack/localstack:0.12.20
     networks:
