@@ -9,7 +9,6 @@ import reactor.util.retry.Retry
 import java.time.Duration
 import java.time.temporal.ChronoUnit
 
-
 @Component
 class CommunityApiClient(@Qualifier("communityWebClientAppScope") private val webClient: WebClient) {
 
@@ -25,12 +24,14 @@ class CommunityApiClient(@Qualifier("communityWebClientAppScope") private val we
     webClient
       .post()
       .uri("/offenders/crn/$crn/tier/$tier")
-      .retrieve().toBodilessEntity().retryWhen(Retry
-        .fixedDelay(3, Duration.of(2, ChronoUnit.SECONDS))
-        .filter(this::is5xxServerError)).block()
+      .retrieve().toBodilessEntity().retryWhen(
+        Retry
+          .fixedDelay(3, Duration.of(2, ChronoUnit.SECONDS))
+          .filter(this::is5xxServerError)
+      ).block()
   }
 
-  private fun is5xxServerError(throwable: Throwable) : Boolean{
+  private fun is5xxServerError(throwable: Throwable): Boolean {
     return throwable is WebClientResponseException &&
       throwable.statusCode.is5xxServerError
   }
