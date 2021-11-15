@@ -61,7 +61,7 @@ internal class TierTest : MockedEndpointsTestBase() {
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
     (await withPollInterval ONE_MILLISECOND).ignoreException(IllegalArgumentException::class)
       .untilAsserted { communityApi.verify(tierWriteback) }
-    await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
+    (await withPollInterval ONE_MILLISECOND).untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
   }
 
   @Test
@@ -75,7 +75,7 @@ internal class TierTest : MockedEndpointsTestBase() {
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
     (await withPollInterval TWO_SECONDS).ignoreException(IllegalArgumentException::class)
       .untilAsserted { communityApi.verify(tierWriteback, VerificationTimes.exactly(3)) }
-    await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
+    (await withPollInterval ONE_MILLISECOND).untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
   }
 
   @Test
@@ -84,7 +84,7 @@ internal class TierTest : MockedEndpointsTestBase() {
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
     (await withPollInterval ONE_MILLISECOND).ignoreException(IllegalArgumentException::class)
       .untilAsserted { hmppsTier.verify(notFoundRequest) }
-    await untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
+    (await withPollInterval ONE_MILLISECOND).untilCallTo { getNumberOfMessagesCurrentlyNotVisibleOnQueue() } matches { it == 1 }
   }
 
   private fun setupTierCalculationResponse() {
