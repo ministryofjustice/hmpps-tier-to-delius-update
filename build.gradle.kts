@@ -1,7 +1,7 @@
 
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.13-beta-2"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "3.3.14"
   kotlin("plugin.spring") version "1.5.0"
   jacoco
   id("io.gitlab.arturbosch.detekt").version("1.17.1")
