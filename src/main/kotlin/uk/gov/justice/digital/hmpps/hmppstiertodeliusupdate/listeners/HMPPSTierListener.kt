@@ -49,6 +49,5 @@ class HMPPSTierListener(
     val crn: String,
     val calculationId: UUID
   )
-
   private data class SQSMessage(@SerializedName("Message") val message: String)
 }
