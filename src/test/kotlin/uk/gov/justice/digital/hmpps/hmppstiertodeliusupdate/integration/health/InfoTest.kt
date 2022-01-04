@@ -15,7 +15,7 @@ internal class InfoTest : IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectBody()
-      .jsonPath("app.name").isEqualTo("Hmpps Tier To Delius Update")
+      .jsonPath("build.name").isEqualTo("hmpps-tier-to-delius-update")
   }
 
   @Test
