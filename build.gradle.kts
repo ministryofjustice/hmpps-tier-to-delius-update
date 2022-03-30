@@ -27,7 +27,7 @@ dependencies {
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
   testImplementation("org.mock-server:mockserver-netty:5.11.1")
-  testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
+  testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
 }
 
 jacoco {
