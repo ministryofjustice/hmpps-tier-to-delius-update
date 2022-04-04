@@ -1,8 +1,8 @@
 
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.1.1"
-  kotlin("plugin.spring") version "1.6.10"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.1.2"
+  kotlin("plugin.spring") version "1.6.20"
   jacoco
   id("io.gitlab.arturbosch.detekt").version("1.19.0")
 }
@@ -20,14 +20,14 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
   implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
-  implementation("com.google.code.gson:gson:2.8.6")
+  implementation("com.google.code.gson:gson:2.9.0")
 
   implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:1.1.2")
 
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
-  testImplementation("org.mock-server:mockserver-netty:5.11.1")
-  testImplementation("org.awaitility:awaitility-kotlin:4.0.3")
+  testImplementation("org.mock-server:mockserver-netty:5.13.0")
+  testImplementation("org.awaitility:awaitility-kotlin:4.2.0")
 }
 
 jacoco {
