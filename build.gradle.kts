@@ -20,7 +20,7 @@ dependencies {
 
   implementation("com.google.code.gson:gson:2.9.0")
 
-  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:1.1.3")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:1.1.5")
 
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
