@@ -20,7 +20,7 @@ dependencies {
 
   implementation("com.google.code.gson:gson:2.9.0")
 
-  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:1.1.5")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:1.1.6")
 
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
@@ -107,5 +107,5 @@ repositories {
 detekt {
   config = files("src/test/resources/detekt-config.yml")
   buildUponDefaultConfig = true
-  ignoreFailures = true
+  ignoreFailures = false
 }

@@ -1,3 +1,6 @@
+build:
+  maxIssues: 3
+  excludeCorrectable: false
 
 complexity:
   active: true
