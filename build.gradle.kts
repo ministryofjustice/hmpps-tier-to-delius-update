@@ -29,7 +29,7 @@ dependencies {
 }
 
 jacoco {
-  toolVersion = "0.8.7"
+  toolVersion = "0.8.8"
 }
 
 tasks {
@@ -47,9 +47,9 @@ tasks {
     }
     dependsOn("test")
     reports {
-      xml.isEnabled = false
-      csv.isEnabled = false
-      html.destination = file("$buildDir/reports/coverage")
+      xml.required.set(false)
+      csv.required.set(false)
+      html.outputLocation.set(file("$buildDir/reports/coverage"))
     }
   }
 }
@@ -87,13 +87,13 @@ tasks {
 
   compileKotlin {
     kotlinOptions {
-      jvmTarget = "17"
+      jvmTarget = "18"
     }
   }
 }
 
 java {
-  toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+  toolchain.languageVersion.set(JavaLanguageVersion.of(18))
 }
 
 tasks.named("check") {
