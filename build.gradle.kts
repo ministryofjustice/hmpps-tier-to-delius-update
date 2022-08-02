@@ -47,9 +47,9 @@ tasks {
     }
     dependsOn("test")
     reports {
-      xml.isEnabled = false
-      csv.isEnabled = false
-      html.destination = file("$buildDir/reports/coverage")
+      xml.required.set(false)
+      csv.required.set(false)
+      html.outputLocation.set(file("$buildDir/reports/coverage"))
     }
   }
 }
