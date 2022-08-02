@@ -87,13 +87,13 @@ tasks {
 
   compileKotlin {
     kotlinOptions {
-      jvmTarget = "17"
+      jvmTarget = "18"
     }
   }
 }
 
 java {
-  toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+  toolchain.languageVersion.set(JavaLanguageVersion.of(18))
 }
 
 tasks.named("check") {
