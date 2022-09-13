@@ -8,6 +8,10 @@ import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryEve
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.service.TelemetryEventType.TIER_UPDATE_CALL_SUCCESS
 import java.util.UUID
 
+private const val CALCULATION_ID = "calculationId"
+
+private const val CRN = "crn"
+
 @Component
 class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) {
 
@@ -19,8 +23,8 @@ class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) 
     trackEvent(
       TIER_UPDATE_CALL_SUCCESS,
       mapOf(
-        "crn" to crn,
-        "calculationId" to calculationId.toString()
+        CRN to crn,
+        CALCULATION_ID to calculationId.toString()
       )
     )
   }
@@ -29,8 +33,8 @@ class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) 
     trackEvent(
       TIER_UPDATE_CALL_FAILED,
       mapOf(
-        "crn" to crn,
-        "calculationId" to calculationId.toString()
+        CRN to crn,
+        CALCULATION_ID to calculationId.toString()
       )
     )
   }
@@ -39,8 +43,8 @@ class TelemetryService(@Autowired private val telemetryClient: TelemetryClient) 
     trackEvent(
       TIER_UPDATE_CALL_FAILED_OFFENDER_NOT_FOUND,
       mapOf(
-        "crn" to crn,
-        "calculationId" to calculationId.toString()
+        CRN to crn,
+        CALCULATION_ID to calculationId.toString()
       )
     )
   }
