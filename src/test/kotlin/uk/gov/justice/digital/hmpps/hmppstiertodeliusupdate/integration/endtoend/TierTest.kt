@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.integration.endtoen
 
 import org.awaitility.Durations.ONE_HUNDRED_MILLISECONDS
 import org.awaitility.Durations.ONE_MILLISECOND
-import org.awaitility.Durations.TWO_SECONDS
 import org.awaitility.kotlin.await
 import org.awaitility.kotlin.ignoreException
 import org.awaitility.kotlin.matches
@@ -15,7 +14,6 @@ import org.mockserver.model.HttpResponse.notFoundResponse
 import org.mockserver.model.HttpResponse.response
 import org.mockserver.model.MediaType.APPLICATION_JSON
 import org.mockserver.model.RequestDefinition
-import org.mockserver.verify.VerificationTimes
 import uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.helpers.tierUpdateMessage
 import java.nio.file.Files.readString
 import java.nio.file.Paths
@@ -73,8 +71,7 @@ internal class TierTest : MockedEndpointsTestBase() {
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
-    (await withPollInterval TWO_SECONDS).ignoreException(IllegalArgumentException::class)
-      .untilAsserted { communityApi.verify(tierWriteback, VerificationTimes.exactly(3)) }
+    await.untilAsserted { communityApi.verify(tierWriteback) }
     (await withPollInterval ONE_MILLISECOND).untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 1 }
   }
 
