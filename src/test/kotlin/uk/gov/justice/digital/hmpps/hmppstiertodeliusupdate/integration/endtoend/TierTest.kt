@@ -1,12 +1,8 @@
 package uk.gov.justice.digital.hmpps.hmppstiertodeliusupdate.integration.endtoend
 
-import org.awaitility.Durations.ONE_HUNDRED_MILLISECONDS
-import org.awaitility.Durations.ONE_MILLISECOND
 import org.awaitility.kotlin.await
-import org.awaitility.kotlin.ignoreException
 import org.awaitility.kotlin.matches
 import org.awaitility.kotlin.untilCallTo
-import org.awaitility.kotlin.withPollInterval
 import org.junit.jupiter.api.Test
 import org.mockserver.model.HttpRequest
 import org.mockserver.model.HttpRequest.request
@@ -29,8 +25,7 @@ internal class TierTest : MockedEndpointsTestBase() {
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
-    (await withPollInterval ONE_HUNDRED_MILLISECONDS).ignoreException(IllegalArgumentException::class)
-      .untilAsserted { communityApi.verify(tierWriteback) }
+    await.untilAsserted { communityApi.verify(tierWriteback) }
   }
 
   @Test
@@ -42,10 +37,9 @@ internal class TierTest : MockedEndpointsTestBase() {
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
-    (await withPollInterval ONE_HUNDRED_MILLISECONDS).ignoreException(IllegalArgumentException::class)
-      .untilAsserted { communityApi.verify(tierWriteback) }
+    await.untilAsserted { communityApi.verify(tierWriteback) }
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
-    (await withPollInterval ONE_MILLISECOND).untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 0 }
+    await untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 0 }
   }
 
   @Test
@@ -57,9 +51,8 @@ internal class TierTest : MockedEndpointsTestBase() {
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
-    (await withPollInterval ONE_MILLISECOND).ignoreException(IllegalArgumentException::class)
-      .untilAsserted { communityApi.verify(tierWriteback) }
-    (await withPollInterval ONE_MILLISECOND).untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 1 }
+    await.untilAsserted { communityApi.verify(tierWriteback) }
+    await untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 1 }
   }
 
   @Test
@@ -72,16 +65,15 @@ internal class TierTest : MockedEndpointsTestBase() {
 
     await untilCallTo { getNumberOfMessagesCurrentlyOnQueue() } matches { it == 0 }
     await.untilAsserted { communityApi.verify(tierWriteback) }
-    (await withPollInterval ONE_MILLISECOND).untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 1 }
+    await untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 1 }
   }
 
   @Test
   fun `returns an error if tier calculation cannot be found`() {
     val notFoundRequest = setupNotFoundTierCalculationResponse()
     awsSqsClient.sendMessage(queue, tierUpdateMessage())
-    (await withPollInterval ONE_MILLISECOND).ignoreException(IllegalArgumentException::class)
-      .untilAsserted { hmppsTier.verify(notFoundRequest) }
-    (await withPollInterval ONE_MILLISECOND).untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 1 }
+    await.untilAsserted { hmppsTier.verify(notFoundRequest) }
+    await untilCallTo { getNumberOfMessagesCurrentlyOnDLQ() } matches { it == 1 }
   }
 
   private fun setupTierCalculationResponse() {
