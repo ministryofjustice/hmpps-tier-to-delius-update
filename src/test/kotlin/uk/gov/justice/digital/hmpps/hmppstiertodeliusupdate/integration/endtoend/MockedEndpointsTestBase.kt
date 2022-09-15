@@ -80,5 +80,4 @@ internal abstract class MockedEndpointsTestBase {
     val queueAttributes = awsSqsClient.getQueueAttributes(dlq, listOf("ApproximateNumberOfMessages"))
     return queueAttributes.attributes["ApproximateNumberOfMessages"]?.toInt()
   }
-
 }
