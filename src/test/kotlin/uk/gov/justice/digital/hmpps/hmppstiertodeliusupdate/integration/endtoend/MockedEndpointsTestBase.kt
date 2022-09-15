@@ -29,7 +29,8 @@ internal abstract class MockedEndpointsTestBase {
   @Autowired
   internal lateinit var awsSqsClient: AmazonSQS
 
-  protected val queue by lazy { hmppsQueueService.findByQueueId("tiercalculationqueue")?.queueUrl ?: throw MissingQueueException("HmppsQueue tiercalculationqueue not found") }
+  protected val queue by lazy { hmppsQueueService.findByQueueId("tiercalculationqueue")?.queueUrl ?: throw MissingQueueException("HmppsQueue tiercalculationqueue queue not found") }
+  protected val dlq by lazy { hmppsQueueService.findByQueueId("tiercalculationqueue")?.dlqUrl ?: throw MissingQueueException("HmppsQueue tiercalculationqueue dlq not found") }
 
   @Autowired
   protected lateinit var hmppsQueueService: HmppsQueueService
@@ -44,6 +45,7 @@ internal abstract class MockedEndpointsTestBase {
   @BeforeEach
   fun before() {
     awsSqsClient.purgeQueue(PurgeQueueRequest(queue))
+    awsSqsClient.purgeQueue(PurgeQueueRequest(dlq))
     setupOauth()
   }
 
@@ -53,6 +55,7 @@ internal abstract class MockedEndpointsTestBase {
     communityApi.reset()
     oauthMock.reset()
     awsSqsClient.purgeQueue(PurgeQueueRequest(queue))
+    awsSqsClient.purgeQueue(PurgeQueueRequest(dlq))
   }
 
   @AfterAll
@@ -73,8 +76,9 @@ internal abstract class MockedEndpointsTestBase {
     return queueAttributes.attributes["ApproximateNumberOfMessages"]?.toInt()
   }
 
-  fun getNumberOfMessagesCurrentlyNotVisibleOnQueue(): Int? {
-    val queueAttributes = awsSqsClient.getQueueAttributes(queue, listOf("ApproximateNumberOfMessagesNotVisible"))
-    return queueAttributes.attributes["ApproximateNumberOfMessagesNotVisible"]?.toInt()
+  fun getNumberOfMessagesCurrentlyOnDLQ(): Int? {
+    val queueAttributes = awsSqsClient.getQueueAttributes(dlq, listOf("ApproximateNumberOfMessages"))
+    return queueAttributes.attributes["ApproximateNumberOfMessages"]?.toInt()
   }
+
 }
