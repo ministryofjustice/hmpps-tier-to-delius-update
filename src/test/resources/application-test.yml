@@ -20,6 +20,7 @@ hmpps.sqs:
       queueName: tier-calculation-queue
       subscribeTopicId: tiercalculationtopic
       subscribeFilter: '{"eventType":[ "TIER_CALCULATION_COMPLETE"] }'
+      dlqMaxReceiveCount: 1
   topics:
     tiercalculationtopic:
       arn: arn:aws:sns:eu-west-2:000000000000:${random.uuid}
