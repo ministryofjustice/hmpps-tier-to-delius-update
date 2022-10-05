@@ -1,6 +1,6 @@
 
 plugins {
-  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.5.0"
+  id("uk.gov.justice.hmpps.gradle-spring-boot") version "4.5.2"
   kotlin("plugin.spring") version "1.7.10"
   jacoco
   id("io.gitlab.arturbosch.detekt").version("1.20.0")
@@ -21,7 +21,7 @@ dependencies {
 
   implementation("com.google.code.gson:gson:2.9.1")
 
-  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:1.1.8")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:1.1.11")
 
   testAnnotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
 
