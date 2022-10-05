@@ -1,7 +1,7 @@
 version: "3"
 services:
   localstack:
-    image: localstack/localstack:0.12.20
+    image: localstack/localstack:1.1.0
     networks:
       - hmpps
     container_name: hmpps-tier-to-delius-update-localstack
@@ -14,7 +14,7 @@ services:
       - DOCKER_HOST=unix:///var/run/docker.sock
       - DEFAULT_REGION=eu-west-2
     volumes:
-      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
+      - "${LOCALSTACK_VOLUME_DIR:-/tmp/localstack}:/var/lib/localstack"
       - "/var/run/docker.sock:/var/run/docker.sock"
 
 networks:
